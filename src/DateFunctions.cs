@@ -10,7 +10,7 @@ namespace CrusaderKingsStoryGen
     {
         public static int MakeDOBAtLeastAdult(int inDOB)
         {
-            int age = 769 - inDOB;
+            int age = 1066 - inDOB;
 
             if (age < 16)
                 inDOB -= (16 - age);

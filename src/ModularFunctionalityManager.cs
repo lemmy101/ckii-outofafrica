@@ -19,7 +19,7 @@ namespace CrusaderKingsStoryGen
         public void Save()
         {
             Script s = new Script();
-            s.Name = Globals.ModDir + "events\\gen_" + name + "_events.txt";
+            s.Name = Globals.ModDir + "events/gen_" + name + "_events.txt";
 
             s.Root = new ScriptScope();
             s.Root.Add(new ScriptCommand("namespace", nameSpace, s.Root));
@@ -32,7 +32,7 @@ namespace CrusaderKingsStoryGen
 
             s.Save();
             s = new Script();
-            s.Name = Globals.ModDir + "decisions\\gen_" + name + "_decisions.txt";
+            s.Name = Globals.ModDir + "decisions/gen_" + name + "_decisions.txt";
 
             s.Root = new ScriptScope();
             ScriptScope ss = new ScriptScope();
@@ -50,7 +50,7 @@ namespace CrusaderKingsStoryGen
             s.Save();
 
             s = new Script();
-            s.Name = Globals.ModDir + "common\\traits\\03_zz_gen_" + name + "_traits.txt";
+            s.Name = Globals.ModDir + "common/traits/03_zz_gen_" + name + "_traits.txt";
 
             s.Root = new ScriptScope();
      //       s.Root.Add(new ScriptCommand("namespace", nameSpace, s.Root));
@@ -245,24 +245,24 @@ namespace CrusaderKingsStoryGen
 
         public void Save()
         {
-            if (!Directory.Exists(Globals.ModDir + "decisions\\"))
-                Directory.CreateDirectory(Globals.ModDir + "decisions\\");
-            var files = Directory.GetFiles(Globals.ModDir + "decisions\\");
+            if (!Directory.Exists(Globals.ModDir + "decisions/"))
+                Directory.CreateDirectory(Globals.ModDir + "decisions/");
+            var files = Directory.GetFiles(Globals.ModDir + "decisions/");
             foreach (var file in files)
             {
                 File.Delete(file);
             }
 
-            if (!Directory.Exists(Globals.ModDir + "events\\"))
-                Directory.CreateDirectory(Globals.ModDir + "events\\");
-            files = Directory.GetFiles(Globals.ModDir + "events\\");
+            if (!Directory.Exists(Globals.ModDir + "events/"))
+                Directory.CreateDirectory(Globals.ModDir + "events/");
+            files = Directory.GetFiles(Globals.ModDir + "events/");
             foreach (var file in files)
             {
                 File.Delete(file);
             }
-            if (!Directory.Exists(Globals.ModDir + "common\\traits\\"))
-                Directory.CreateDirectory(Globals.ModDir + "common\\traits\\");
-            files = Directory.GetFiles(Globals.ModDir + "common\\traits\\");
+            if (!Directory.Exists(Globals.ModDir + "common/traits/"))
+                Directory.CreateDirectory(Globals.ModDir + "common/traits/");
+            files = Directory.GetFiles(Globals.ModDir + "common/traits/");
             foreach (var file in files)
             {
                 File.Delete(file);

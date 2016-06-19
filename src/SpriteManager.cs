@@ -29,7 +29,7 @@ namespace CrusaderKingsStoryGen
             s.Name = "spriteTypes";
             spriteTypes = s;
             script.Root.Add(s);
-            script.Name = Globals.ModDir + "interface\\genGraphics.gfx";
+            script.Name = Globals.ModDir + "interface/genGraphics.gfx";
         }
 
         public void AddTraitSprite(String name, String relFilename)
@@ -61,7 +61,7 @@ namespace CrusaderKingsStoryGen
 
             scope.Do(@"
                 	        name = ""GFX_icon_" + government.name + @"
-		                    texturefile = gfx\\interface\\government_icon_" + government.name.Replace("_government", "")+".dds" );
+		                    texturefile = gfx/interface/government_icon_" + government.name.Replace("_government", "")+".dds" );
 
             spriteTypes.Add(scope);
         }

@@ -66,9 +66,9 @@ namespace CrusaderKingsStoryGen
                 }
             }
 
-            if (!Directory.Exists(Globals.ModDir + "gfx\\interface\\"))
-                Directory.CreateDirectory(Globals.ModDir + "gfx\\interface\\");
-            var files = Directory.GetFiles(Globals.ModDir + "gfx\\interface\\");
+            if (!Directory.Exists(Globals.ModDir + "gfx/interface/"))
+                Directory.CreateDirectory(Globals.ModDir + "gfx/interface/");
+            var files = Directory.GetFiles(Globals.ModDir + "gfx/interface/");
             foreach (var file in files)
             {
                 File.Delete(file);
@@ -82,7 +82,7 @@ namespace CrusaderKingsStoryGen
                     case "nomadic":
                         try
                         {
-                            File.Copy(Globals.GameDir + "gfx\\interface\\government_icon_nomadic.dds", Globals.ModDir + "gfx\\interface\\government_icon_" + government.name.Replace("government_", "") + ".dds");
+                            File.Copy(Globals.GameDir + "gfx/interface/government_icon_nomadic.dds", Globals.ModDir + "gfx/interface/government_icon_" + government.name.Replace("government_", "") + ".dds");
                         }
                         catch (Exception)
                         {
@@ -95,7 +95,7 @@ namespace CrusaderKingsStoryGen
                     case "tribal":
                        try
                         {
-                            File.Copy(Globals.GameDir + "gfx\\interface\\government_icon_tribal.dds", Globals.ModDir + "gfx\\interface\\government_icon_" + government.name.Replace("government_", "") + ".dds");
+                            File.Copy(Globals.GameDir + "gfx/interface/government_icon_tribal.dds", Globals.ModDir + "gfx/interface/government_icon_" + government.name.Replace("government_", "") + ".dds");
                         }
                         catch (Exception)
                         {
@@ -108,7 +108,7 @@ namespace CrusaderKingsStoryGen
                     case "feudal":
                         try
                         {
-                            File.Copy(Globals.GameDir + "gfx\\interface\\government_icon_feudal.dds", Globals.ModDir + "gfx\\interface\\government_icon_" + government.name.Replace("government_", "") + ".dds");
+                            File.Copy(Globals.GameDir + "gfx/interface/government_icon_feudal.dds", Globals.ModDir + "gfx/interface/government_icon_" + government.name.Replace("government_", "") + ".dds");
 
                         }
                         catch (Exception)
@@ -122,7 +122,7 @@ namespace CrusaderKingsStoryGen
                     case "theocracy":
                         try
                         {
-                            File.Copy(Globals.GameDir + "gfx\\interface\\government_icon_theocracy.dds", Globals.ModDir + "gfx\\interface\\government_icon_" + government.name.Replace("government_", "") + ".dds");
+                            File.Copy(Globals.GameDir + "gfx/interface/government_icon_theocracy.dds", Globals.ModDir + "gfx/interface/government_icon_" + government.name.Replace("government_", "") + ".dds");
                         }
                         catch (Exception)
                         {
@@ -135,7 +135,7 @@ namespace CrusaderKingsStoryGen
                     case "republic":
                         try
                         {
-                            File.Copy(Globals.GameDir + "gfx\\interface\\government_icon_republic.dds", Globals.ModDir + "gfx\\interface\\government_icon_" + government.name.Replace("government_", "") + ".dds");
+                            File.Copy(Globals.GameDir + "gfx/interface/government_icon_republic.dds", Globals.ModDir + "gfx/interface/government_icon_" + government.name.Replace("government_", "") + ".dds");
 
                         }
                         catch (Exception)
@@ -152,7 +152,7 @@ namespace CrusaderKingsStoryGen
 
             Script s = new Script();
 
-            s.Name = Globals.ModDir + "common\\governments\\nomadic_governments.txt";
+            s.Name = Globals.ModDir + "common/governments/nomadic_governments.txt";
 
             s.Root = new ScriptScope();
 
@@ -174,7 +174,7 @@ namespace CrusaderKingsStoryGen
 
             s = new Script();
 
-            s.Name = Globals.ModDir + "common\\governments\\feudal_governments.txt";
+            s.Name = Globals.ModDir + "common/governments/feudal_governments.txt";
 
             s.Root = new ScriptScope();
 
@@ -195,7 +195,7 @@ namespace CrusaderKingsStoryGen
             s.Save();
             s = new Script();
 
-            s.Name = Globals.ModDir + "common\\governments\\theocracy_governments.txt";
+            s.Name = Globals.ModDir + "common/governments/theocracy_governments.txt";
 
             s.Root = new ScriptScope();
 
@@ -216,7 +216,7 @@ namespace CrusaderKingsStoryGen
             s.Save();
             s = new Script();
 
-            s.Name = Globals.ModDir + "common\\governments\\republic_governments.txt";
+            s.Name = Globals.ModDir + "common/governments/republic_governments.txt";
 
             s.Root = new ScriptScope();
 
@@ -237,7 +237,7 @@ namespace CrusaderKingsStoryGen
             s.Save();
             s = new Script();
 
-            s.Name = Globals.ModDir + "common\\governments\\tribal_governments.txt";
+            s.Name = Globals.ModDir + "common/governments/tribal_governments.txt";
 
             s.Root = new ScriptScope();
 

@@ -521,29 +521,27 @@ namespace CrusaderKingsStoryGen
 
         public void Save()
         {
-        //    if (!Directory.Exists(Globals.ModDir))
-            {
-                Directory.CreateDirectory(Globals.ModDir);
-                Directory.CreateDirectory(Globals.ModDir + "common\\");
-                Directory.CreateDirectory(Globals.ModDir + "common\\cultures\\");
-                Directory.CreateDirectory(Globals.ModDir + "common\\dynasties\\");
-                Directory.CreateDirectory(Globals.ModDir + "common\\landed_titles\\");
-                Directory.CreateDirectory(Globals.ModDir + "common\\religions\\");
-                Directory.CreateDirectory(Globals.ModDir + "common\\religious_titles\\");
-                Directory.CreateDirectory(Globals.ModDir + "common\\traits\\");
-                Directory.CreateDirectory(Globals.ModDir + "history\\");
-                Directory.CreateDirectory(Globals.ModDir + "history\\characters\\");
-                Directory.CreateDirectory(Globals.ModDir + "history\\provinces\\");
-                Directory.CreateDirectory(Globals.ModDir + "history\\titles\\");
-                Directory.CreateDirectory(Globals.ModDir + "decisions\\");
-                Directory.CreateDirectory(Globals.ModDir + "events\\");
-                Directory.CreateDirectory(Globals.ModDir + "gfx\\");
-                Directory.CreateDirectory(Globals.ModDir + "gfx\\traits\\");
-                Directory.CreateDirectory(Globals.ModDir + "gfx\\flags\\");
-                Directory.CreateDirectory(Globals.ModDir + "interface\\");
-                Directory.CreateDirectory(Globals.ModDir + "localisation\\");
-                Directory.CreateDirectory(Globals.ModDir + "map\\");
-            }
+            Directory.CreateDirectory(Globals.ModDir);
+            Directory.CreateDirectory(Globals.ModDir + "common/");
+            Directory.CreateDirectory(Globals.ModDir + "common/cultures/");
+            Directory.CreateDirectory(Globals.ModDir + "common/dynasties/");
+            Directory.CreateDirectory(Globals.ModDir + "common/governments/");
+            Directory.CreateDirectory(Globals.ModDir + "common/landed_titles/");
+            Directory.CreateDirectory(Globals.ModDir + "common/religions/");
+            Directory.CreateDirectory(Globals.ModDir + "common/religious_titles/");
+            Directory.CreateDirectory(Globals.ModDir + "common/traits/");
+            Directory.CreateDirectory(Globals.ModDir + "history/");
+            Directory.CreateDirectory(Globals.ModDir + "history/characters/");
+            Directory.CreateDirectory(Globals.ModDir + "history/provinces/");
+            Directory.CreateDirectory(Globals.ModDir + "history/titles/");
+            Directory.CreateDirectory(Globals.ModDir + "decisions/");
+            Directory.CreateDirectory(Globals.ModDir + "events/");
+            Directory.CreateDirectory(Globals.ModDir + "gfx/");
+            Directory.CreateDirectory(Globals.ModDir + "gfx/traits/");
+            Directory.CreateDirectory(Globals.ModDir + "gfx/flags/");
+            Directory.CreateDirectory(Globals.ModDir + "interface/");
+            Directory.CreateDirectory(Globals.ModDir + "localisation/");
+            Directory.CreateDirectory(Globals.ModDir + "map/");
 
             String filename = Name.Replace(Globals.GameDir, "");
             filename = filename.Replace(Globals.MapDir, "");

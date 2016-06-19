@@ -21,7 +21,7 @@ namespace CrusaderKingsStoryGen
         {
             Script s = new Script();
             script = s;
-            s.Name = Globals.ModDir + "common\\dynasties\\dynasties.txt";
+            s.Name = Globals.ModDir + "common/dynasties/dynasties.txt";
             s.Root = new ScriptScope();
      
         }

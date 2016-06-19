@@ -24,12 +24,12 @@ namespace CrusaderKingsStoryGen
             if (Title == null)
                 return;
 
-            string dir = Globals.ModDir + "history\\provinces\\";
+            string dir = Globals.ModDir + "history/provinces/";
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
-            String provincesDir = Globals.MapDir + "history\\provinces\\" + id.ToString() + " - " + Name.Replace("c_", "") + ".txt";
+            String provincesDir = Globals.MapDir + "history/provinces/" + id.ToString() + " - " + Name.Replace("c_", "") + ".txt";
 
             Script s = new Script();
             s.Root = new ScriptScope();

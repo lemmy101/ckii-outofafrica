@@ -43,7 +43,7 @@ namespace CrusaderKingsStoryGen
         public void Save()
         {
             Script s = new Script();
-            s.Name = Globals.GameDir + "map\\geographical_region.txt";
+            s.Name = Globals.GameDir + "map/geographical_region.txt";
             s.Root = new ScriptScope();
             foreach (var region in regions)
             {

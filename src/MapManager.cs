@@ -123,13 +123,11 @@ namespace CrusaderKingsStoryGen
         List<Script>  provinceScripts = new List<Script>();
         public void Load()
         {
-            String provincesDir = Globals.GameDir + "history\\provinces\\";
+            String provincesDir = Globals.GameDir + "history/provinces/";
             foreach (var file in Directory.GetFiles(provincesDir))
             {
-                String name = file.Substring(file.LastIndexOf('\\') + 1);
+                String name = file.Substring(file.LastIndexOf('/') + 1);
                 int id = Convert.ToInt32(name.Split('-')[0].Trim());
-
-
             }
             TitleManager.instance.Load();
 
@@ -147,10 +145,10 @@ namespace CrusaderKingsStoryGen
            //     TitleManager.instance.CreateDukeScriptScope();
                 Provinces.Add(parser);
             }
-            provincesDir = Globals.GameDir + "history\\provinces\\";
+            provincesDir = Globals.GameDir + "history/provinces/";
             foreach (var file in Directory.GetFiles(provincesDir))
             {
-                String name = file.Substring(file.LastIndexOf('\\') + 1);
+                String name = file.Substring(file.LastIndexOf('/') + 1);
                 int id = Convert.ToInt32(name.Split('-')[0].Trim());
 
                 {
@@ -173,7 +171,7 @@ namespace CrusaderKingsStoryGen
 
             }
             //s
-            ProvinceBitmap = new Bitmap(Globals.MapDir + "map\\provinces.bmp");
+            ProvinceBitmap = new Bitmap(Globals.MapDir + "map/provinces.bmp");
             ProvinceBitmap = ResizeBitmap(ProvinceBitmap, (int)(ProvinceBitmap.Width * SizeMod), (int)(ProvinceBitmap.Height * SizeMod));
             ProvinceRenderBitmap = new Bitmap(ProvinceBitmap.Width, ProvinceBitmap.Height);
             LoadDefinitions();
@@ -304,7 +302,7 @@ namespace CrusaderKingsStoryGen
         }
         private void LoadAdjacencies()
         {
-            String filename = Globals.MapDir + "map\\adjacencies.csv";
+            String filename = Globals.MapDir + "map/adjacencies.csv";
             using (System.IO.StreamReader file =
                 new System.IO.StreamReader(filename, Encoding.GetEncoding(1252)))
             {
@@ -405,7 +403,7 @@ namespace CrusaderKingsStoryGen
         }
         private void LoadDefinitions()
         {
-            String filename = Globals.MapDir + "map\\definition.csv";
+            String filename = Globals.MapDir + "map/definition.csv";
             using (System.IO.StreamReader file =
                 new System.IO.StreamReader(filename, Encoding.GetEncoding(1252)))
             {
@@ -450,10 +448,10 @@ namespace CrusaderKingsStoryGen
 
         public void SaveDefinitions()
         {
-            String filename = Globals.ModDir + "map\\definition.csv";
+            String filename = Globals.ModDir + "map/definition.csv";
             List<String> defs = new List<string>();
             using (System.IO.StreamReader filein =
-                 new System.IO.StreamReader(Globals.MapDir + "map\\definition.csv", Encoding.GetEncoding(1252)))
+                 new System.IO.StreamReader(Globals.MapDir + "map/definition.csv", Encoding.GetEncoding(1252)))
             {
                 string line = "";
                 int count = 0;
