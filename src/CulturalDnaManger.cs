@@ -46,7 +46,7 @@ namespace CrusaderKingsStoryGen
         public void Init()
         {
          
-            Script s = ScriptLoader.instance.Load(Globals.GameDir+"common\\cultures\\00_cultures.txt");
+            Script s = ScriptLoader.instance.Load(Globals.GameDir+"common/cultures/00_cultures.txt");
             foreach (var child in s.Root.Children)
             {
                 if (child is ScriptScope)

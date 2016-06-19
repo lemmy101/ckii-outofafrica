@@ -19,11 +19,11 @@ namespace CrusaderKingsStoryGen
         {
             bInit = true;
             CharactersScript = new Script();
-            CharactersScript.Name = Globals.ModDir + "history\\characters\\characters.txt";
+            CharactersScript.Name = Globals.ModDir + "history/characters/characters.txt";
             CharactersScript.Root = new ScriptScope();
             CharactersScript.Root.AllowDuplicates = false;
             CharactersScript.Root.Clear();
-            int d = 768 - 18;
+            int d = 1066 - 18;
             foreach (var child in CharactersScript.Root.Children)
             {
                 if (child is ScriptScope)
@@ -186,7 +186,7 @@ namespace CrusaderKingsStoryGen
             chr.religion = religion;
             chr.isFemale = bFemale;
             chr.culture = culture;
-            chr.YearOfDeath = 769 + Rand.Next(30);
+            chr.YearOfDeath = 1066 + Rand.Next(30);
             this.CharactersScript.Root.SetChild(chr.Scope);
             AddedSinceLastPrune.Add(chr);
             CharacterMap[chr.ID] = chr;
@@ -209,12 +209,12 @@ namespace CrusaderKingsStoryGen
             //     chr.SetProperty("religion", new ScriptReference("pagan"));
             //  chr.DeleteProperty("name");
             Characters.Add(chr);
-            chr.YearOfBirth = 769 - Rand.Next(60);
+            chr.YearOfBirth = 1066 - Rand.Next(60);
             chr.Dynasty = DynastyManager.instance.GetDynasty(CultureManager.instance.CultureMap[culture]);
             chr.religion = religion;
             chr.isFemale = bFemale;
             chr.culture = culture;
-            chr.YearOfDeath = 769 + Rand.Next(30);
+            chr.YearOfDeath = 1066 + Rand.Next(30);
             this.CharactersScript.Root.SetChild(chr.Scope);
             AddedSinceLastPrune.Add(chr);
             CharacterMap[chr.ID] = chr;

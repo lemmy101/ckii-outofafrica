@@ -66,7 +66,7 @@ namespace CrusaderKingsStoryGen
             
             Script s = new Script();
             script = s; 
-            s.Name = Globals.ModDir + "common\\religions\\00_religions.txt";
+            s.Name = Globals.ModDir + "common/religions/00_religions.txt";
             s.Root = new ScriptScope();
             ReligionGroupParser r = AddReligionGroup("pagan");
             r.Init();

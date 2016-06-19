@@ -26,7 +26,7 @@ namespace CrusaderKingsStoryGen
 
         public void Save()
         {
-            String filename = "localisation\\aaa_genLanguage.csv";
+            String filename = "localisation/aaa_genLanguage.csv";
 
             filename = Globals.ModDir + filename;
 

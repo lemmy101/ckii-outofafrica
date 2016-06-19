@@ -21,7 +21,7 @@ namespace CrusaderKingsStoryGen
         public void Load()
         {
             LandedTitlesScript = ScriptLoader.instance.Load(
-             Globals.GameDir + "common\\landed_titles\\landed_titles.txt");
+             Globals.GameDir + "common/landed_titles/landed_titles.txt");
 
             LandedTitlesScript.Root.Clear();
             /*
@@ -560,9 +560,9 @@ namespace CrusaderKingsStoryGen
                     religionParser.DoLeader(religionParser.Believers[Rand.Next(religionParser.Believers.Count)]);
                 }
             }
-             if(!Directory.Exists(Globals.ModDir + "history\\titles\\"))
-                Directory.CreateDirectory(Globals.ModDir + "history\\titles\\");
-            var files = Directory.GetFiles(Globals.ModDir + "history\\titles\\");
+             if(!Directory.Exists(Globals.ModDir + "history/titles/"))
+                Directory.CreateDirectory(Globals.ModDir + "history/titles/");
+            var files = Directory.GetFiles(Globals.ModDir + "history/titles/");
             foreach (var file in files)
             {
                 File.Delete(file);
@@ -575,21 +575,20 @@ namespace CrusaderKingsStoryGen
                 {
                     
                 }
-                Script titleScript = ScriptLoader.instance.Load(Globals.GameDir + "history\\titles\\" + title + ".txt");
+                Script titleScript = ScriptLoader.instance.Load(Globals.GameDir + "history/titles/" + title + ".txt");
                 
                 titleScript.Root.Clear();
                
                
 
                 {
-                   if (titleScript.Root.HasNamed("767.1.1"))
+                   if (titleScript.Root.HasNamed("1066.1.1"))
                     {
-                        titleScript.Root.Delete("767.1.1");
-                        titleScript.Root.Delete("768.1.1");
+                        titleScript.Root.Delete("1066.1.1");
                     }
                     {
                         ScriptScope thing = new ScriptScope();
-                        thing.Name = "767.1.1";
+                        thing.Name = "1066.1.1";
                         titleScript.Root.SetChild(thing);
                         if (title.Culture.dna.horde)
                             thing.Add(new ScriptCommand() { Name = "historical_nomad", Value = true });
@@ -611,9 +610,6 @@ namespace CrusaderKingsStoryGen
                             thing.Add(new ScriptCommand() { Name = "holder", Value = title.SubTitles.Values.ToArray()[0].Holder.ID });
                         //    title.SubTitles.Values.ToArray()[0].Holder.MakeAlive();
                         }
-                         thing = new ScriptScope();
-                         thing.Name = "768.1.1";
-                         titleScript.Root.SetChild(thing);
                          if (title.CurrentHolder != null)
                          {
                              thing.Add(new ScriptCommand() { Name = "holder", Value = title.CurrentHolder.ID });

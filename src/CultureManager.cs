@@ -483,7 +483,7 @@ namespace CrusaderKingsStoryGen
             
             Script s = new Script();
             script = s; 
-            s.Name = Globals.ModDir + "common\\cultures\\00_cultures.txt";
+            s.Name = Globals.ModDir + "common/cultures/00_cultures.txt";
             s.Root = new ScriptScope();
             CultureGroupParser r = AddCultureGroup("barbarian");
 

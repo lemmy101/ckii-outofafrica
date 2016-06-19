@@ -13,9 +13,9 @@ namespace CrusaderKingsStoryGen
 
         public void Init()
         {
-            if (!Directory.Exists(Globals.ModDir + "gfx\\traits"))
-                Directory.CreateDirectory(Globals.ModDir + "gfx\\traits");
-            var files = Directory.GetFiles(Globals.ModDir + "gfx\\traits");
+            if (!Directory.Exists(Globals.ModDir + "gfx/traits"))
+                Directory.CreateDirectory(Globals.ModDir + "gfx/traits");
+            var files = Directory.GetFiles(Globals.ModDir + "gfx/traits");
             foreach (var file in files)
             {
                 File.Delete(file);
@@ -26,7 +26,7 @@ namespace CrusaderKingsStoryGen
         public void AddTrait(String name, String srcFilename)
         {
             String srcend = srcFilename.Substring(srcFilename.LastIndexOf('.'));
-            File.Copy(Globals.SrcTraitIconDir+srcFilename, Globals.ModDir + "gfx\\traits\\" + name + srcend);
+            File.Copy(Globals.SrcTraitIconDir+srcFilename, Globals.ModDir + "gfx/traits/" + name + srcend);
             SpriteManager.instance.AddTraitSprite(name, "gfx/traits/" + name + srcend);
         }
 
@@ -37,7 +37,7 @@ namespace CrusaderKingsStoryGen
 
             String s = files[Rand.Next(files.Length)];
 
-            String srcend = s.Substring(s.LastIndexOf('\\')+1);
+            String srcend = s.Substring(s.LastIndexOf('/')+1);
             AddTrait(safeName, srcend);
       
         }

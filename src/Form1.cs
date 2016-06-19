@@ -21,7 +21,7 @@ namespace CrusaderKingsStoryGen
         public Form1()
         {
 
-            String filename = ".\\settings.txt";
+            String filename = "./settings.txt";
 
 
             brush = new SolidBrush(Color.White);
@@ -29,11 +29,11 @@ namespace CrusaderKingsStoryGen
             InitializeComponent();
          
             string mydocs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            mydocs += "\\Paradox Interactive\\Crusader Kings II\\mod\\";
+            mydocs += "/Paradox Interactive/Crusader Kings II/mod/";
 
             Globals.ModRoot = mydocs;
 
-            Globals.ModDir = Globals.ModRoot + modname.Text + "\\";
+            Globals.ModDir = Globals.ModRoot + modname.Text + "/";
         
             if (File.Exists(filename))
             {
@@ -79,8 +79,8 @@ namespace CrusaderKingsStoryGen
                     ck2dir.Text = noSuch;
 
                     Globals.GameDir = ck2dir.Text;
-                    if (!Globals.GameDir.EndsWith("\\"))
-                        Globals.GameDir += "\\";
+                    if (!Globals.GameDir.EndsWith("/"))
+                        Globals.GameDir += "/";
 
 
                 }
@@ -104,7 +104,7 @@ namespace CrusaderKingsStoryGen
             if (autoload)
             {
 
-                filename = ".\\settings.txt";
+                filename = "./settings.txt";
                 using (System.IO.StreamWriter file =
                     new System.IO.StreamWriter(filename, false, Encoding.GetEncoding(1252)))
                 {
@@ -200,13 +200,13 @@ namespace CrusaderKingsStoryGen
             MapManager.instance.UpdateOwnership();
             TitleManager.instance.CreateMercs();
 
-            if (!Globals.ModDir.Contains("\\mod"))
+            if (!Globals.ModDir.Contains("/mod"))
             {
-                if (Globals.ModDir.EndsWith("\\"))
-                    Globals.ModDir += "mod\\" + Globals.ModName + "\\";
+                if (Globals.ModDir.EndsWith("/"))
+                    Globals.ModDir += "mod/" + Globals.ModName + "/";
                 else
                 {
-                    Globals.ModDir += "\\mod\\" + Globals.ModName + "\\";
+                    Globals.ModDir += "/mod/" + Globals.ModName + "/";
                 }
                 
             }
@@ -219,7 +219,6 @@ namespace CrusaderKingsStoryGen
             MapManager.instance.Save();
             GovernmentManager.instance.Save();
             CultureManager.instance.Save();
-            FlagManager.instance.AssignAndSave();
             EventManager.instance.Save();
             DecisionManager.instance.Save();
             MapManager.instance.SaveDefinitions();
@@ -247,9 +246,9 @@ namespace CrusaderKingsStoryGen
             SpriteManager.instance.Save();
             LanguageManager.instance.Save();
 
-            if (!Directory.Exists(Globals.ModDir + "history\\provinces\\"))
-                Directory.CreateDirectory(Globals.ModDir + "history\\provinces\\");
-            var files = Directory.GetFiles(Globals.ModDir + "history\\provinces\\");
+            if (!Directory.Exists(Globals.ModDir + "history/provinces/"))
+                Directory.CreateDirectory(Globals.ModDir + "history/provinces/");
+            var files = Directory.GetFiles(Globals.ModDir + "history/provinces/");
             foreach (var file in files)
             {
                 File.Delete(file);
@@ -275,7 +274,6 @@ replace_path=""history/titles""
 replace_path=""history/characters""
 replace_path=""history/wars""
 replace_path=""history/provinces""
-replace_path=""gfx/flags""
 replace_path=""common/landed_titles""
 replace_path=""common/dynasties""
 replace_path=""common/cultures""
@@ -662,7 +660,6 @@ replace_path=""common/religious_titles""
         {
             SimulationManager.instance.Active = false;
             SimulationManager.instance = new SimulationManager();
-            FlagManager.instance = new FlagManager();
             CulturalDnaManager.instance = new CulturalDnaManager();
             CultureManager.instance = new CultureManager();
             ReligionManager.instance = new ReligionManager();
@@ -710,18 +707,19 @@ replace_path=""common/religious_titles""
             if (d.ShowDialog() == DialogResult.OK)
             {
                 Globals.GameDir = d.SelectedPath;
-                if (Globals.GameDir.Length > 0 && !Globals.GameDir.EndsWith("\\"))
-                    Globals.GameDir += "\\";
+                if (Globals.GameDir.Length > 0 && !(Globals.GameDir.EndsWith("/") || Globals.GameDir.EndsWith("/")))
+                    Globals.GameDir += "/";
 
                 Globals.MapDir = Globals.GameDir;
-                if (Directory.Exists(Globals.MapDir) && File.Exists(Globals.GameDir + "ck2game.exe"))
+                if (Directory.Exists(Globals.MapDir) &&
+                    (File.Exists(Globals.GameDir + "ck2game.exe") || File.Exists(Globals.GameDir + "ck2")))
                 {
                     LoadFiles();
                     exportButton.Enabled = true;
                     start.Enabled = true;
                     stop.Enabled = true;
                     reset.Enabled = true;
-                    String filename = ".\\settings.txt";
+                    String filename = "./settings.txt";
                     using (System.IO.StreamWriter file =
                         new System.IO.StreamWriter(filename, false, Encoding.GetEncoding(1252)))
                     {
@@ -734,7 +732,7 @@ replace_path=""common/religious_titles""
                 else
                 {
                     MessageBox.Show(
-                        "Error: Could not find CK2 base files in specified directory. Make sure you are pointing where CK2 is INSTALLED (for example in C:\\Program Files (x86)\\Steam\\steamapps\\common\\Crusader Kings II) NOT the My Documents folder",
+                        "Error: Could not find CK2 base files in specified directory. Make sure you are pointing where CK2 is INSTALLED (for example in C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings II) NOT the My Documents folder",
                         "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     exportButton.Enabled = false;
                     start.Enabled = false;
@@ -754,15 +752,15 @@ replace_path=""common/religious_titles""
 
         private void modname_TextChanged(object sender, EventArgs e)
         {
-            Globals.ModDir = Globals.ModRoot + modname.Text + "\\";
+            Globals.ModDir = Globals.ModRoot + modname.Text + "/";
             Globals.ModName = modname.Text;
         }
 
         private void ck2dir_KeyPress(object sender, KeyPressEventArgs e)
         {
             Globals.GameDir = ck2dir.Text;
-            if (Globals.GameDir.Length > 0 && !Globals.GameDir.EndsWith("\\"))
-                Globals.GameDir += "\\";
+            if (Globals.GameDir.Length > 0 && !Globals.GameDir.EndsWith("/"))
+                Globals.GameDir += "/";
 
             Globals.MapDir = Globals.GameDir;
             if(Directory.Exists(Globals.MapDir))
