@@ -287,7 +287,7 @@
             this.Controls.Add(this.renderPanel);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
-            this.Text = "Out of Africa: CK2 Alternate History Generator v0.2";
+            this.Text = "Out of Africa: CK2 Alternate History Generator v0.2.1";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
