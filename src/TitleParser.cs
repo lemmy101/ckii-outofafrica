@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -11,7 +27,7 @@ using CrusaderKingsStoryGen.Simulation;
 
 namespace CrusaderKingsStoryGen
 {
-    class TitleParser : Parser
+    internal class TitleParser : Parser
     {
         public int Rank = 1;
         public Dictionary<String, TitleParser> SubTitles = new Dictionary<string, TitleParser>();
@@ -19,18 +35,13 @@ namespace CrusaderKingsStoryGen
         public void SetCapital(ProvinceParser cap)
         {
             Scope.Add(new ScriptCommand() { Name = "capital", Value = cap.id });
-           
         }
         public TitleParser Liege
         {
             get { return _liege; }
             set
             {
-               
-              
-
                 _liege = value;
-
             }
         }
 
@@ -91,13 +102,11 @@ namespace CrusaderKingsStoryGen
                 {
                     Liege.SubTitles.Remove(oldName);
                     Liege.SubTitles[name] = this;
-
                 }
             }
 
             Scope.Parent.ChildrenMap.Remove(oldName);
             Scope.Parent.ChildrenMap[name] = this;
-
         }
 
 
@@ -105,8 +114,8 @@ namespace CrusaderKingsStoryGen
         {
             if (sub.Rank >= this.Rank)
                 return;
-          //  if (SubTitles.ContainsKey(sub.Name))
-           //     return;
+            //  if (SubTitles.ContainsKey(sub.Name))
+            //     return;
             if (this == sub)
                 return;
 
@@ -116,11 +125,9 @@ namespace CrusaderKingsStoryGen
             {
                 if (liege == this)
                 {
-
                     return;
                 }
                 liege = liege.Liege;
-                
             }
             if (liege != null)
             {
@@ -129,7 +136,6 @@ namespace CrusaderKingsStoryGen
             SubTitles[sub.Name] = sub;
             Scope.SetChild(sub.Scope);
             sub.Liege = this;
-
         }
         public TitleParser(ScriptScope scope)
             : base(scope)
@@ -138,34 +144,33 @@ namespace CrusaderKingsStoryGen
             Name = scope.Name;
             if (Name.StartsWith("b_"))
             {
-          //      newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture)); 
+                //      newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture)); 
                 Rank = 0;
             }
             if (Name.StartsWith("c_"))
             {
-           //     newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture)); 
+                //     newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture)); 
                 Rank = 1;
             }
             if (Name.StartsWith("d_"))
             {
-           //     newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture)); 
+                //     newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture)); 
                 Rank = 2;
             }
             if (Name.StartsWith("k_"))
             {
-             //   newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture));
+                //   newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture));
                 Rank = 3;
             }
             if (Name.StartsWith("e_"))
             {
-               // newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture) + " Empire");
+                // newName = LanguageManager.instance.Add(Name, StarNames.Generate(culture) + " Empire");
                 Rank = 4;
             }
 
-            
+
             if (TitleManager.instance.TitleMap.ContainsKey(Name))
             {
-                
             }
             TitleManager.instance.TitleMap[Name] = this;
             TitleManager.instance.Titles.Add(this);
@@ -175,7 +180,6 @@ namespace CrusaderKingsStoryGen
                 if (child is ScriptCommand)
                 {
                     RegisterProperty(line, ((child as ScriptCommand).Name), child);
-                  
                 }
                 line++;
                 if (child is ScriptScope)
@@ -187,7 +191,7 @@ namespace CrusaderKingsStoryGen
                         subscope.Name == "coat_of_arms")
                         continue;
                     SubTitles[subscope.Name] = new TitleParser(subscope);
-                  
+
                     SubTitles[subscope.Name].Liege = this;
                     if (subscope.Name.StartsWith("b_"))
                     {
@@ -207,10 +211,7 @@ namespace CrusaderKingsStoryGen
                         Owns.Add(CapitalProvince);
                         CapitalProvince.title = this.Name;
                     }
-
                 }
-
-
             }
             else if (MapManager.instance.ProvinceMap.ContainsKey(Name) && Rank == 1)
             {
@@ -221,20 +222,18 @@ namespace CrusaderKingsStoryGen
                     Owns.Add(CapitalProvince);
                     CapitalProvince.title = this.Name;
                 }
-
             }
         }
 
         public void DoCapital()
         {
-           
         }
 
         public override string ToString()
         {
             return Name;
         }
-        
+
         public ProvinceParser CapitalProvince { get; set; }
 
         public CharacterParser Holder
@@ -254,12 +253,9 @@ namespace CrusaderKingsStoryGen
                         SetProperty("color", col);
                         SetProperty("color2", col);
                     }
-                    
                 }
-             
+
                 //foreach (var provinceParser in CapitalProvince)
-               
-                
             }
         }
 
@@ -295,7 +291,7 @@ namespace CrusaderKingsStoryGen
                 int c = 0;
                 if (Rank == 1)
                     return 1;
-            
+
                 return c;
             }
         }
@@ -353,12 +349,11 @@ namespace CrusaderKingsStoryGen
         }
 
         public bool SameRealm(TitleParser title)
-        {          
+        {
             var liege = this;
 
             while (liege.Liege != null && liege.Rank < liege.Liege.Rank)
             {
-                
                 liege = liege.Liege;
             }
             var liege2 = title;
@@ -369,12 +364,10 @@ namespace CrusaderKingsStoryGen
             }
 
             return liege == liege2;
-
         }
-        
+
         public void AddChildProvinces(List<ProvinceParser> targets)
         {
-      
             foreach (var subTitle in SubTitles)
             {
                 targets.AddRange(subTitle.Value.Owns);
@@ -384,11 +377,10 @@ namespace CrusaderKingsStoryGen
 
         public bool Adjacent(TitleParser other)
         {
-        
             if (AdjacentToTitleSet.Contains(other))
                 return other.AdjacentToTitle.Contains(this);
-          
-            if (Rank==1)
+
+            if (Rank == 1)
             {
                 if (this.Owns.Count == 0)
                     return false;
@@ -403,14 +395,12 @@ namespace CrusaderKingsStoryGen
                             AddAdj(other);
                             return true;
                         }
-                     
                     }
                 }
-
             }
-            if (Rank==2)
+            if (Rank == 2)
             {
-                if (other.Rank==2)
+                if (other.Rank == 2)
                 {
                     foreach (var titleParser in other.SubTitles)
                     {
@@ -420,9 +410,7 @@ namespace CrusaderKingsStoryGen
 
                             return true;
                         }
-                       
                     }
-                    
                 }
                 else
                 {
@@ -431,7 +419,6 @@ namespace CrusaderKingsStoryGen
                         AddAdj(other);
                         return true;
                     }
-                  
                 }
             }
             AddNotAdj(other);
@@ -447,7 +434,6 @@ namespace CrusaderKingsStoryGen
             AdjacentToTitle.Add(other);
             other.AdjacentToTitleSet.Add(this);
             other.AdjacentToTitle.Add(this);
-
         }
         private void AddNotAdj(TitleParser other)
         {
@@ -456,7 +442,6 @@ namespace CrusaderKingsStoryGen
 
             AdjacentToTitleSet.Add(other);
             other.AdjacentToTitleSet.Add(this);
-          
         }
 
 
@@ -488,12 +473,11 @@ namespace CrusaderKingsStoryGen
             if (choices.Count == 0)
                 return null;
             return choices[Rand.Next(choices.Count)];
-     
         }
-        
+
         public void GetRandomLowRankLandedTitle(List<TitleParser> choices)
         {
-            if(this.Owns.Count > 0 && this.Holder.PrimaryTitle.Rank==1)
+            if (this.Owns.Count > 0 && this.Holder.PrimaryTitle.Rank == 1)
                 choices.Add(this);
 
             foreach (var titleParser in SubTitles)
@@ -503,12 +487,10 @@ namespace CrusaderKingsStoryGen
 
             if (choices.Count == 0)
                 return;
-
         }
 
         public void SplitLands()
         {
-          
             if (Rank == 2)
             {
                 List<ProvinceParser> titles = GetAllProvinces();
@@ -518,7 +500,7 @@ namespace CrusaderKingsStoryGen
                 {
                     tits.Add(TitleManager.instance.TitleMap[provinceParser.title]);
                 }
-              //  TitleManager.instance.PromoteNewRuler(TitleManager.instance.CreateDuke(tits));
+                //  TitleManager.instance.PromoteNewRuler(TitleManager.instance.CreateDuke(tits));
             }
         }
 
@@ -530,7 +512,7 @@ namespace CrusaderKingsStoryGen
 
             foreach (var provinceParser in provinces)
             {
-                if(start.Adjacent.Contains(provinceParser))
+                if (start.Adjacent.Contains(provinceParser))
                     split.Add(provinceParser);
 
                 if (split.Count >= preferedSize)
@@ -548,11 +530,9 @@ namespace CrusaderKingsStoryGen
                             split.Add(provinceParser);
 
                         if (split.Count >= preferedSize)
-                            break; 
+                            break;
                     }
-                 
                 }
-
             }
 
             return split;
@@ -569,10 +549,9 @@ namespace CrusaderKingsStoryGen
 
         public List<ProvinceParser> GetAllProvinces(List<ProvinceParser> provinces)
         {
-
-            if(Owns.Count > 0 && !provinces.Contains(Owns[0]))
+            if (Owns.Count > 0 && !provinces.Contains(Owns[0]))
                 provinces.Add(Owns[0]);
-        
+
             foreach (var subTitle in SubTitles)
             {
                 if (subTitle.Value.Rank >= Rank)

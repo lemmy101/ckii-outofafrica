@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,23 +23,22 @@ using CrusaderKingsStoryGen.Simulation;
 
 namespace CrusaderKingsStoryGen
 {
-    class ReligionManager
+    internal class ReligionManager
     {
         public static ReligionManager instance = new ReligionManager();
-        private Script script;
+        private Script _script;
         public List<ReligionParser> AllReligions = new List<ReligionParser>();
         public Dictionary<String, ReligionParser> ReligionMap = new Dictionary<String, ReligionParser>();
         public List<ReligionGroupParser> AllReligionGroups = new List<ReligionGroupParser>();
-        
+
         public ReligionManager()
         {
-        
         }
 
         public Script Script
         {
-            get { return script; }
-            set { script = value; }
+            get { return _script; }
+            set { _script = value; }
         }
 
         public Dictionary<String, ReligionGroupParser> GroupMap = new Dictionary<string, ReligionGroupParser>();
@@ -32,9 +47,9 @@ namespace CrusaderKingsStoryGen
         {
             ScriptScope scope = new ScriptScope();
             scope.Name = name;
-            
-            script.Root.Add(scope);
-            
+
+            _script.Root.Add(scope);
+
             ReligionGroupParser r = new ReligionGroupParser(scope);
 
             r.Init();
@@ -55,7 +70,7 @@ namespace CrusaderKingsStoryGen
                 }
             }
 
-            script.Save();
+            _script.Save();
         }
 
         public void Init()
@@ -63,20 +78,19 @@ namespace CrusaderKingsStoryGen
             LanguageManager.instance.Add("norse", StarNames.Generate(Rand.Next(1000000)));
             LanguageManager.instance.Add("pagan", StarNames.Generate(Rand.Next(1000000)));
             LanguageManager.instance.Add("christian", StarNames.Generate(Rand.Next(1000000)));
-            
+
             Script s = new Script();
-            script = s; 
+            _script = s;
             s.Name = Globals.ModDir + "common/religions/00_religions.txt";
             s.Root = new ScriptScope();
             ReligionGroupParser r = AddReligionGroup("pagan");
             r.Init();
             var pagan = r.AddReligion("pagan");
 
-            pagan.CreateRandomReligion(null); 
-            
+            pagan.CreateRandomReligion(null);
+
             AllReligionGroups.Add(r);
             s.Save();
-           
         }
 
         public ReligionParser BranchReligion(string religion, ProvinceParser capital = null)
@@ -84,7 +98,7 @@ namespace CrusaderKingsStoryGen
             var rel = this.ReligionMap[religion];
             var group = rel.Group;
 
-            if (rel.Group.Religions.Count > 3 && Rand.Next(2)==0)
+            if (rel.Group.Religions.Count > 3 && Rand.Next(2) == 0)
             {
                 String name = StarNames.Generate(capital.Title.culture);
                 String safe = StarNames.SafeName(name);
@@ -105,7 +119,6 @@ namespace CrusaderKingsStoryGen
                 rel2.Mutate(rel, capital.Title.Culture, 6);
                 return rel2;
             }
-         
         }
     }
 }

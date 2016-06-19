@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,26 +31,25 @@ namespace CrusaderKingsStoryGen
 {
     public partial class Form1 : Form
     {
-        private SolidBrush brush;
+        private SolidBrush _brush;
         public static bool loaded = false;
         public static bool autoload = true;
         public Form1()
         {
-
             String filename = "./settings.txt";
 
 
-            brush = new SolidBrush(Color.White);
-          //  Rand.SetSeed();
+            _brush = new SolidBrush(Color.White);
+            //  Rand.SetSeed();
             InitializeComponent();
-         
+
             string mydocs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             mydocs += "/Paradox Interactive/Crusader Kings II/mod/";
 
             Globals.ModRoot = mydocs;
 
             Globals.ModDir = Globals.ModRoot + modname.Text + "/";
-        
+
             if (File.Exists(filename))
             {
                 using (System.IO.StreamReader file =
@@ -62,16 +77,15 @@ namespace CrusaderKingsStoryGen
                     stop.Enabled = false;
                     reset.Enabled = false;
                 }
-                
             }
             else
             {
                 string userRoot = "HKEY_LOCAL_MACHINE";
                 string subkey = "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 203770";
                 string keyName = userRoot + "\\" + subkey;
-                 string noSuch = (string)Registry.GetValue(keyName,
-                 "InstallLocation",
-                 null);
+                string noSuch = (string)Registry.GetValue(keyName,
+                "InstallLocation",
+                null);
                 // Console.WriteLine("\r\nNoSuchName: {0}", noSuch);
 
                 if (noSuch != null)
@@ -81,15 +95,12 @@ namespace CrusaderKingsStoryGen
                     Globals.GameDir = ck2dir.Text;
                     if (!Globals.GameDir.EndsWith("/"))
                         Globals.GameDir += "/";
-
-
                 }
                 else
                 {
                     ck2dir.Text = "";
-
                 }
-              
+
                 if (Globals.GameDir == null || !Directory.Exists(Globals.GameDir))
                 {
                     // doesn't exist, so don't load everything yet...
@@ -103,22 +114,20 @@ namespace CrusaderKingsStoryGen
 
             if (autoload)
             {
-
                 filename = "./settings.txt";
                 using (System.IO.StreamWriter file =
                     new System.IO.StreamWriter(filename, false, Encoding.GetEncoding(1252)))
                 {
-
                     file.Write(Globals.GameDir);
 
                     file.Close();
                 }
             }
-         
+
             Globals.MapDir = Globals.GameDir;
             numericUpDown3.Value = Globals.OneInChanceOfCultureSplinter;
             ReligionStability.Value = Globals.OneInChanceOfReligionSplinter;
-            GovernmentStability.Value = (decimal) (Globals.BaseChanceOfRevolt / 1000);
+            GovernmentStability.Value = (decimal)(Globals.BaseChanceOfRevolt / 1000);
 
             if (autoload)
             {
@@ -142,9 +151,9 @@ namespace CrusaderKingsStoryGen
         private void renderPanel_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.Clear(Color.Black);
-           // e.Graphics.DrawImage(MapManager.instance.ProvinceRenderBitmap, new Rectangle(0, 0, Width, Height));
+            // e.Graphics.DrawImage(MapManager.instance.ProvinceRenderBitmap, new Rectangle(0, 0, Width, Height));
             MapManager.instance.Draw(e.Graphics, renderPanel.Width, renderPanel.Height);
-            e.Graphics.DrawString(SimulationManager.instance.Year.ToString(), DefaultFont, brush, new PointF(10, 10));
+            e.Graphics.DrawString(SimulationManager.instance.Year.ToString(), DefaultFont, _brush, new PointF(10, 10));
         }
 
         private void renderPanel_Resize(object sender, EventArgs e)
@@ -152,25 +161,22 @@ namespace CrusaderKingsStoryGen
             renderPanel.Invalidate();
         }
 
-        private int ticks = 0;
+        private int _ticks = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
             SimulationManager.instance.Tick();
             MapManager.instance.RandomChange();
             renderPanel.Invalidate();
-            ticks++;
-           
+            _ticks++;
         }
 
         public static Form1 instance;
         private void renderPanel_Click(object sender, EventArgs e)
         {
-            
         }
 
         public void Export()
         {
-         
             // for (int x = 0; x < 30; x++)
             {
                 CharacterParser[] a = CharacterManager.instance.Characters.ToArray();
@@ -184,19 +190,19 @@ namespace CrusaderKingsStoryGen
                         // index--;
                         continue;
                     }
-                
+
                     if (characterParser.PrimaryTitle.Rank < 1)
                         continue;
-                 
+
                     characterParser.ConvertCountTitlesToDuchies();
                 }
             }
 
             FixupDuchies();
             CreateKingdomsFromDuchies();
-//            CreateEmpiresFromKingdoms();
+            //            CreateEmpiresFromKingdoms();
             FixupTitles();
-          
+
             MapManager.instance.UpdateOwnership();
             TitleManager.instance.CreateMercs();
 
@@ -208,9 +214,8 @@ namespace CrusaderKingsStoryGen
                 {
                     Globals.ModDir += "/mod/" + Globals.ModName + "/";
                 }
-                
             }
-      
+
             TitleManager.instance.SaveTitles();
 
             TitleManager.instance.LandedTitlesScript.Save();
@@ -226,19 +231,15 @@ namespace CrusaderKingsStoryGen
             if (CultureManager.instance.CultureMap.Count > 0)
                 foreach (var titleParser in TitleManager.instance.Titles)
                 {
-                 
-
                     if (titleParser.Holder != null && CultureManager.instance.CultureMap.ContainsKey(titleParser.Holder.culture) &&
                         CultureManager.instance.CultureMap[titleParser.Holder.culture].dna != null)
                     {
-                        if (titleParser.Rank == 4 )
+                        if (titleParser.Rank == 4)
                             LanguageManager.instance.Add(titleParser.Name,
                                 LanguageManager.instance.Get(titleParser.Name) + " Empire");
-                        else if (LanguageManager.instance.Get(titleParser.Name)==null)
+                        else if (LanguageManager.instance.Get(titleParser.Name) == null)
                             titleParser.RenameForCulture(titleParser.Holder.Culture);
-
                     }
-
                 }
             DynastyManager.instance.Save();
 
@@ -253,7 +254,7 @@ namespace CrusaderKingsStoryGen
             {
                 File.Delete(file);
             }
-            
+
             foreach (var provinceParser in MapManager.instance.Provinces)
             {
                 if (provinceParser.land && provinceParser.title != null)
@@ -266,8 +267,7 @@ namespace CrusaderKingsStoryGen
             using (System.IO.StreamWriter file =
              new System.IO.StreamWriter(filename, false, Encoding.GetEncoding(1252)))
             {
-
-               file.Write(@"name="""+ modname.Text +@"""
+                file.Write(@"name=""" + modname.Text + @"""
 path=""mod/" + modname.Text + @"""
 user_dir = """ + modname.Text + @"""
 replace_path=""history/titles""
@@ -284,7 +284,7 @@ replace_path=""common/religious_titles""
                 file.Close();
             }
 
-       //     this.Close();
+            //     this.Close();
         }
 
         private void CreateKingdomsFromDuchies()
@@ -306,7 +306,7 @@ replace_path=""common/religious_titles""
                 var duchie = duchies[index];
                 int kingSize = Rand.Next(4 * 4, 16 * 4);
                 var results = duchie.Holder.GetProvinceGroup(kingSize, null);
-                if (results.Count < 4*4)
+                if (results.Count < 4 * 4)
                     continue;
                 List<TitleParser> kingdomDuchies = new List<TitleParser>();
                 foreach (var provinceParser in results)
@@ -320,7 +320,7 @@ replace_path=""common/religious_titles""
                     {
                         var liege = provinceParser.Title.Liege;
 
-                        if (liege.Holder != null &&  liege.Rank==2 &&liege.Holder.PrimaryTitle.Rank == 2)
+                        if (liege.Holder != null && liege.Rank == 2 && liege.Holder.PrimaryTitle.Rank == 2)
                         {
                             if (!kingdomDuchies.Contains(liege) && !done.Contains(liege))
                                 kingdomDuchies.Add(liege);
@@ -328,12 +328,12 @@ replace_path=""common/religious_titles""
                     }
                 }
 
-                if(kingdomDuchies.Count < 3)
+                if (kingdomDuchies.Count < 3)
                     continue;
 
                 foreach (var kingdomDuchy in kingdomDuchies)
                 {
-                    int i = duchies.IndexOf(kingdomDuchy);                    
+                    int i = duchies.IndexOf(kingdomDuchy);
                     duchies.Remove(kingdomDuchy);
                     if (i < index)
                         index--;
@@ -350,7 +350,7 @@ replace_path=""common/religious_titles""
 
                 var list = title.GetAllProvinces();
 
-                int num = Math.Min(5, list.Count/2);
+                int num = Math.Min(5, list.Count / 2);
                 chr.GiveTitleAsHolder(list[0].Title.Liege);
                 foreach (var value in list[0].Title.Liege.SubTitles.Values)
                 {
@@ -383,7 +383,7 @@ replace_path=""common/religious_titles""
                 }
             }
 
-           for (int index = 0; index < kingdoms.Count; index++)
+            for (int index = 0; index < kingdoms.Count; index++)
             {
                 var kingdom = kingdoms[index];
                 if (kingdom.Holder == null)
@@ -393,9 +393,9 @@ replace_path=""common/religious_titles""
 
                 int kingSize = Rand.Next(4 * 4 * 4 * 4, 8 * 8 * 8 * 8);
                 var results = kingdom.Holder.GetProvinceGroup(kingSize, null);
-            
+
                 List<TitleParser> kingdomDuchies = new List<TitleParser>();
-           
+
                 foreach (var provinceParser in results)
                 {
                     if (!provinceParser.land)
@@ -422,12 +422,11 @@ replace_path=""common/religious_titles""
                     }
                     if (kingdomDuchies.Count > 6)
                         break;
-
                 }
                 if (kingdomDuchies.Count < 4)
                     continue;
 
-               if(done.Count > kingdomDuchies.Count)
+                if (done.Count > kingdomDuchies.Count)
                     return;
 
                 foreach (var kingdomDuchy in kingdomDuchies)
@@ -437,8 +436,8 @@ replace_path=""common/religious_titles""
                     if (i < index)
                         index--;
                 }
-                kingdoms.AddRange(kingdomDuchies); 
-  
+                kingdoms.AddRange(kingdomDuchies);
+
                 var chr = SimulationManager.instance.AddCharacter(kingdom.Holder.culture, kingdom.Holder.religion);
                 var title = TitleManager.instance.CreateEmpireScriptScope(kingdom.CapitalProvince, chr);
                 chr.GiveTitle(title);
@@ -451,14 +450,12 @@ replace_path=""common/religious_titles""
                 var count = chr.UsurpCountTitle();
                 if (count == null)
                     continue;
-             
+
                 while (count.Liege != null && count.Liege.Rank > count.Rank)
                 {
                     count = count.Liege;
                     chr.GiveTitleAsHolder(count);
                 }
-
-               
             }
         }
 
@@ -495,8 +492,6 @@ replace_path=""common/religious_titles""
                 {
                     orphans.Add(titleParser);
                 }
-
-               
             }
 
             for (int index = 0; index < orphans.Count; index++)
@@ -602,7 +597,7 @@ replace_path=""common/religious_titles""
             for (int index = 0; index < orphans.Count; index++)
             {
                 var titleParser = orphans[index];
-                int kingSize = Rand.Next(10*10);
+                int kingSize = Rand.Next(10 * 10);
                 var results = titleParser.Holder.GetProvinceGroup(kingSize, null);
 
                 foreach (var provinceParser in results)
@@ -625,9 +620,8 @@ replace_path=""common/religious_titles""
 
                         if (index2 <= index)
                             index--;
-                        orphans.Remove(parser);                            
+                        orphans.Remove(parser);
                     }
-                    
                 }
 
                 String name = forRegion[0].Culture.dna.GetPlaceName();
@@ -638,7 +632,6 @@ replace_path=""common/religious_titles""
 
         private void label1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void exportButton_Click(object sender, EventArgs e)
@@ -674,7 +667,7 @@ replace_path=""common/religious_titles""
             MapManager.instance.Load();
             //  TitleManager.instance.Load();
 
-            MapManager.instance.InitRandom();    
+            MapManager.instance.InitRandom();
             renderPanel.Invalidate();
         }
 
@@ -682,7 +675,6 @@ replace_path=""common/religious_titles""
         {
             // culture
             Globals.OneInChanceOfCultureSplinter = (int)numericUpDown3.Value;
-          
         }
 
         private void ReligionStability_ValueChanged(object sender, EventArgs e)
@@ -692,12 +684,11 @@ replace_path=""common/religious_titles""
 
         private void GovernmentStability_ValueChanged(object sender, EventArgs e)
         {
-            Globals.BaseChanceOfRevolt = (int)GovernmentStability.Value*1000;
+            Globals.BaseChanceOfRevolt = (int)GovernmentStability.Value * 1000;
         }
 
         private void label3_Click(object sender, EventArgs e)
         {
-
         }
 
         private void selectCK2Dir_Click(object sender, EventArgs e)
@@ -723,7 +714,6 @@ replace_path=""common/religious_titles""
                     using (System.IO.StreamWriter file =
                         new System.IO.StreamWriter(filename, false, Encoding.GetEncoding(1252)))
                     {
-
                         file.Write(Globals.GameDir);
 
                         file.Close();
@@ -740,14 +730,12 @@ replace_path=""common/religious_titles""
                     reset.Enabled = false;
                 }
 
-                this.ck2dir.Text = Globals.GameDir;
-
+                ck2dir.Text = Globals.GameDir;
             }
         }
 
         private void ck2dir_TextChanged(object sender, EventArgs e)
         {
-          
         }
 
         private void modname_TextChanged(object sender, EventArgs e)
@@ -763,7 +751,7 @@ replace_path=""common/religious_titles""
                 Globals.GameDir += "/";
 
             Globals.MapDir = Globals.GameDir;
-            if(Directory.Exists(Globals.MapDir))
+            if (Directory.Exists(Globals.MapDir))
                 LoadFiles();
         }
     }

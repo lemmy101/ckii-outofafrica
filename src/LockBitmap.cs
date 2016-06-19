@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -11,9 +27,9 @@ namespace CrusaderKingsStoryGen
 {
     public class LockBitmap
     {
-        Bitmap source = null;
-        IntPtr Iptr = IntPtr.Zero;
-        BitmapData bitmapData = null;
+        private Bitmap _source = null;
+        private IntPtr _iptr = IntPtr.Zero;
+        private BitmapData _bitmapData = null;
 
         public byte[] Pixels { get; set; }
         public int Depth { get; private set; }
@@ -22,7 +38,7 @@ namespace CrusaderKingsStoryGen
 
         public LockBitmap(Bitmap source)
         {
-            this.source = source;
+            _source = source;
         }
 
         public bool locked = false;
@@ -37,8 +53,8 @@ namespace CrusaderKingsStoryGen
             try
             {
                 // Get width and height of bitmap
-                Width = source.Width;
-                Height = source.Height;
+                Width = _source.Width;
+                Height = _source.Height;
 
                 // get total locked pixels count
                 int PixelCount = Width * Height;
@@ -47,7 +63,7 @@ namespace CrusaderKingsStoryGen
                 Rectangle rect = new Rectangle(0, 0, Width, Height);
 
                 // get source bitmap pixel format size
-                Depth = System.Drawing.Bitmap.GetPixelFormatSize(source.PixelFormat);
+                Depth = System.Drawing.Bitmap.GetPixelFormatSize(_source.PixelFormat);
 
                 // Check if bpp (Bits Per Pixel) is 8, 24, or 32
                 if (Depth != 8 && Depth != 24 && Depth != 32)
@@ -56,16 +72,16 @@ namespace CrusaderKingsStoryGen
                 }
 
                 // Lock bitmap and return bitmap data
-                bitmapData = source.LockBits(rect, ImageLockMode.ReadWrite,
-                                             source.PixelFormat);
+                _bitmapData = _source.LockBits(rect, ImageLockMode.ReadWrite,
+                                             _source.PixelFormat);
 
                 // create byte array to copy pixel values
                 int step = Depth / 8;
                 Pixels = new byte[PixelCount * step];
-                Iptr = bitmapData.Scan0;
+                _iptr = _bitmapData.Scan0;
 
                 // Mutate data from pointer to array
-                Marshal.Copy(Iptr, Pixels, 0, Pixels.Length);
+                Marshal.Copy(_iptr, Pixels, 0, Pixels.Length);
             }
             catch (Exception ex)
             {
@@ -84,19 +100,19 @@ namespace CrusaderKingsStoryGen
             try
             {
                 // Mutate data from byte array to pointer
-                Marshal.Copy(Pixels, 0, Iptr, Pixels.Length);
+                Marshal.Copy(Pixels, 0, _iptr, Pixels.Length);
 
                 // Unlock bitmap data
-                source.UnlockBits(bitmapData);
+                _source.UnlockBits(_bitmapData);
             }
             catch (Exception ex)
             {
                 // Mutate data from byte array to pointer
-              //  Marshal.Mutate(Pixels, 0, Iptr, Pixels.Length);
+                //  Marshal.Mutate(Pixels, 0, Iptr, Pixels.Length);
 
                 // Unlock bitmap data
-             //   source.UnlockBits(bitmapData); 
-             //   throw ex;
+                //   source.UnlockBits(bitmapData); 
+                //   throw ex;
             }
         }
 

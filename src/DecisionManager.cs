@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,12 +23,12 @@ using System.Threading.Tasks;
 
 namespace CrusaderKingsStoryGen
 {
-    class DecisionManager
+    internal class DecisionManager
     {
-       public static DecisionManager instance = new DecisionManager();
-        public List<Script>  Scripts = new List<Script>();
+        public static DecisionManager instance = new DecisionManager();
+        public List<Script> Scripts = new List<Script>();
 
-        private string[] exclude = new[]
+        private string[] _exclude = new[]
         {
             "convert_to_swedish",
             "convert_to_norwegian",
@@ -66,12 +82,12 @@ namespace CrusaderKingsStoryGen
              "convert_to_dutch",
              "convert_to_occitan",
              "convert_to_russian",
-             "renounce_iconoclasm",                      
+             "renounce_iconoclasm",
              "convert_to_reformed",
         };
         public bool IncludeDecision(String str)
         {
-            if (exclude.Contains(str))
+            if (_exclude.Contains(str))
                 return false;
 
             return true;
@@ -92,7 +108,7 @@ namespace CrusaderKingsStoryGen
             foreach (var script in Scripts)
             {
                 ExporeDecisions(script.Root.Children[0] as ScriptScope);
-        //        script.Save();
+                //        script.Save();
             }
         }
 
@@ -101,16 +117,16 @@ namespace CrusaderKingsStoryGen
             for (int index = 0; index < node.Children.Count; index++)
             {
                 var child = node.Children[index];
-                
+
                 if (child is ScriptScope)
                 {
-                    if(!IncludeDecision((child as ScriptScope).Name))
+                    if (!IncludeDecision((child as ScriptScope).Name))
                     {
                         node.Remove(child);
                         index--;
                         continue;
                     }
-                  //  RemoveAllReligionTests(child as ScriptScope);
+                    //  RemoveAllReligionTests(child as ScriptScope);
                 }
             }
         }
@@ -123,23 +139,20 @@ namespace CrusaderKingsStoryGen
 
                 if (child is ScriptScope)
                 {
-
                     RemoveAllReligionTests(child as ScriptScope);
                 }
                 if (child is ScriptCommand)
                 {
-                    ScriptCommand c = (ScriptCommand) child;
+                    ScriptCommand c = (ScriptCommand)child;
                     if (c.Name == "religion" || c.Name == "religion_group")
                     {
                         if (c.Value.ToString().ToUpper() == "FROM" || c.Value.ToString().ToUpper() == "ROOT" || c.Value.ToString().ToUpper().Contains("PREV"))
                         {
-
                         }
                         else
                         {
                             node.Remove(child);
                             index--;
-
                         }
                         continue;
                     }
@@ -147,13 +160,11 @@ namespace CrusaderKingsStoryGen
                     {
                         if (c.Value.ToString().ToUpper() == "FROM" || c.Value.ToString().ToUpper() == "ROOT" || c.Value.ToString().ToUpper().Contains("PREV"))
                         {
-
                         }
                         else
                         {
                             node.Remove(child);
                             index--;
-
                         }
                         continue;
                     }

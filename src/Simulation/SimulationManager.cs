@@ -1,9 +1,25 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 
 namespace CrusaderKingsStoryGen.Simulation
 {
-    class SimulationManager
+    internal class SimulationManager
     {
         public static SimulationManager instance = new SimulationManager();
         public List<CharacterParser> characters = new List<CharacterParser>();
@@ -11,7 +27,7 @@ namespace CrusaderKingsStoryGen.Simulation
         public bool Active { get; set; }
         public void Init()
         {
-        //    ModularFunctionalityManager.instance.Save();
+            //    ModularFunctionalityManager.instance.Save();
             DynastyManager.instance.Init();
             CharacterManager.instance.Init();
             CulturalDnaManager.instance.Init();
@@ -28,26 +44,23 @@ namespace CrusaderKingsStoryGen.Simulation
             CharacterParser chr = CharacterManager.instance.GetNewCharacter();
             characters.Add(chr);
 
-            Random rand = new Random(); 
+            Random rand = new Random();
             for (int n = 0; n < 1; n++)
             {
-                
                 ScriptScope s = new ScriptScope();
                 string name = chr.Culture.dna.GetPlaceName();
 
-            
+
                 s.Name = StarNames.SafeName(name);
                 LanguageManager.instance.Add(s.Name, name);
                 //872 vanilla
 
                 MapManager.instance.ProvinceIDMap[872].RenameForCulture(chr.Culture);
                 var tit = MapManager.instance.ProvinceIDMap[872].CreateTitle();
-            //    if (chr.Culture.dna.horde)
-            //        tit.Scope.Do("historical_nomad = yes");
+                //    if (chr.Culture.dna.horde)
+                //        tit.Scope.Do("historical_nomad = yes");
                 chr.GiveTitle(tit);
                 MapManager.instance.ProvinceIDMap[872].CreateProvinceDetails(chr.Culture);
-              
-             
             }
         }
 
@@ -63,7 +76,7 @@ namespace CrusaderKingsStoryGen.Simulation
         public CharacterParser AddCharacter(String culture, String religion)
         {
             CharacterParser chr = CharacterManager.instance.CreateNewCharacter(culture, religion, Rand.Next(8) == 0);
-           
+
             return chr;
         }
 
@@ -78,7 +91,6 @@ namespace CrusaderKingsStoryGen.Simulation
         }
         public void Tick()
         {
-
             if (!Active)
                 return;
 
@@ -90,10 +102,8 @@ namespace CrusaderKingsStoryGen.Simulation
             }
             for (int n = 0; n < 100; n++)
             {
-
-                for(int x=0;x<characters.Count;x++)
+                for (int x = 0; x < characters.Count; x++)
                 {
-               
                     CharacterParser character = characters[x];
                     if (character.Liege != null)
                         continue;
@@ -102,26 +112,22 @@ namespace CrusaderKingsStoryGen.Simulation
 
                     if (character.PrimaryTitle.Government != null)
                     {
-                     
                         if (!character.PrimaryTitle.Government.cultureAllow.Contains(character.culture))
                         {
                             if (character.culture == "norse")
                             {
-                                
                             }
                             character.PrimaryTitle.Government.cultureAllow.Add(character.culture);
                             //Government.cultureDone.Add(character.culture + "_" + character.PrimaryTitle.Government.type);
-      
+
                         }
-                   
                     }
-                   
+
                     character.UpdateCultural();
                     if (character.PrimaryTitle != null && character.PrimaryTitle.Liege == null)
                     {
-                        if(!character.TickDisable)
+                        if (!character.TickDisable)
                             character.Tick();
-                       
                     }
                     float chanceOfRevolt = 1.0f;
 
@@ -154,10 +160,10 @@ namespace CrusaderKingsStoryGen.Simulation
                 Year++;
                 if (Year == 5000)
                 {
-              //      Form1.instance.Export();
+                    //      Form1.instance.Export();
                 }
             }
-            
+
             MapManager.instance.UnlockRenderBitmap();
         }
 
@@ -177,7 +183,7 @@ namespace CrusaderKingsStoryGen.Simulation
                         }
                     }
                 }
-            }    
+            }
             var pr = new List<ProvinceParser>();
 
             foreach (var title in character.Titles)
@@ -194,7 +200,7 @@ namespace CrusaderKingsStoryGen.Simulation
                             break;
                         }
                     }
-                    if(bDo)
+                    if (bDo)
                         pr.Add(title.Owns[0]);
                 }
             }
@@ -206,7 +212,7 @@ namespace CrusaderKingsStoryGen.Simulation
                 bool keep = false;
                 foreach (var parser in provinceParser.Adjacent)
                 {
-                    if(parser.title == null)
+                    if (parser.title == null)
                         continue;
                     ;
                     if (parser.Title.Holder == null)
@@ -220,7 +226,6 @@ namespace CrusaderKingsStoryGen.Simulation
                     pr.Remove(provinceParser);
                     index--;
                 }
-              
             }
             if (pr.Count == 0)
                 return;
@@ -230,13 +235,13 @@ namespace CrusaderKingsStoryGen.Simulation
             provinces.Add(p);
             while (provinces.Count < character.Titles.Count / 2)
             {
-                MapManager.instance.FindAdjacent(provinces, provinces.Count/2);
+                MapManager.instance.FindAdjacent(provinces, provinces.Count / 2);
             }
             var ch = CharacterManager.instance.GetNewCharacter();
             characters.Add(ch);
             foreach (var provinceParser in provinces)
             {
-                if(provinceParser.title != null)
+                if (provinceParser.title != null)
                     ch.GiveTitle(TitleManager.instance.TitleMap[provinceParser.title]);
             }
 
@@ -251,7 +256,7 @@ namespace CrusaderKingsStoryGen.Simulation
                 nn += ReligionManager.instance.ReligionMap[character.religion].Resilience;
 
 
-         
+
             if (Rand.Next(nn) == 0)
             {
                 ReligionParser r = ReligionManager.instance.BranchReligion(character.religion, pr[Rand.Next(pr.Count)]);
@@ -268,7 +273,5 @@ namespace CrusaderKingsStoryGen.Simulation
                 }
             }
         }
-
-       
     }
 }

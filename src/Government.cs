@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -7,14 +23,14 @@ using System.Threading.Tasks;
 
 namespace CrusaderKingsStoryGen
 {
-    class Government
+    internal class Government
     {
         public string type = "nomadic";
-        public List<String> preferred_holdings = new List<string>() {"NOMAD"};
+        public List<String> preferred_holdings = new List<string>() { "NOMAD" };
 
         public List<String> builds_with_prestige = new List<string>();
         public List<String> builds_with_piety = new List<string>();
-        public List<String> allowed_holdings = new List<string>() { "NOMAD"};
+        public List<String> allowed_holdings = new List<string>() { "NOMAD" };
         public List<String> allowed_holdings_culture = new List<string>();
         public List<String> allowed_holdings_religion = new List<string>();
         public List<String> allowed_holdings_culture_and_religion = new List<string>();
@@ -29,10 +45,10 @@ namespace CrusaderKingsStoryGen
 
         public Color color;
 
-  
+
         public List<String> ignore_in_vassal_limit_calculation = new List<string>();
         public bool allows_matrilineal_marriage = true;
-        
+
         public String title_prefix = null;
         public String frame_suffix = null;
         public bool merchant_republic = false;
@@ -59,26 +75,25 @@ namespace CrusaderKingsStoryGen
         public bool can_grant_kingdoms_and_empires_to_other_government = true;
         public bool can_be_granted_kingdoms_and_empires_by_other_government = true;
         public bool free_retract_vassalage = true;
-        public int max_consorts = 3 ;
+        public int max_consorts = 3;
 
         public double aggression = 4;
         public string name;
 
-        static HashSet<String> done = new HashSet<string>();
+        private static HashSet<String> s_done = new HashSet<string>();
         public static List<String> cultureDone = new List<string>();
-        private bool can_change_to_nomad_on_start = false;
+        private bool _can_change_to_nomad_on_start = false;
 
         private string GetWordList(List<string> strs)
         {
-            done.Clear();
+            s_done.Clear();
             String re = "";
             foreach (var str in strs)
             {
-                if (!done.Contains(str))
+                if (!s_done.Contains(str))
                     re += str + " ";
 
-                done.Add(str);                
-                
+                s_done.Add(str);
             }
 
             return re;
@@ -122,21 +137,21 @@ namespace CrusaderKingsStoryGen
                 dukes_called_kings = " + (dukes_called_kings ? "yes" : "no") + @"
                 free_retract_vassalage = " + (free_retract_vassalage ? "yes" : "no") + @"
                 ignores_de_jure_laws = " + (ignores_de_jure_laws ? "yes" : "no") + @"
-                can_change_to_nomad_on_start = " + (can_change_to_nomad_on_start ? "yes" : "no") + @"
+                can_change_to_nomad_on_start = " + (_can_change_to_nomad_on_start ? "yes" : "no") + @"
           
                 " + (frame_suffix != null ? @"
 			        frame_suffix = " + frame_suffix : "") + @"
                 " + (title_prefix != null ? @"
 			        title_prefix = " + title_prefix : "") + @"
             
-                merchant_republic = " + (type=="republic" ? "yes" : "no") + @"
+                merchant_republic = " + (type == "republic" ? "yes" : "no") + @"
                 uses_decadence = " + (uses_decadence ? "yes" : "no") + @"
                 uses_piety_for_law_change = " + (uses_piety_for_law_change ? "yes" : "no") + @"
                 uses_prestige_for_law_change = " + (uses_prestige_for_law_change ? "yes" : "no") + @"
                 " + (preferred_holdings.Count > 0 ? @"
                 preferred_holdings = { 
                     " + GetWordList(preferred_holdings) + @" 
-                }" : "" ) + @"
+                }" : "") + @"
                 " + (allowed_holdings.Count > 0 ? @"
                 allowed_holdings = { 
                     " + GetWordList(allowed_holdings) + @" 
@@ -167,7 +182,7 @@ namespace CrusaderKingsStoryGen
                     " + (cultureAllow.Count > 1 ? @"
 			        OR = {
                         " + cultureBlock + @"
-                    } " : cultureBlock ) + @"
+                    } " : cultureBlock) + @"
 			        is_patrician = " + (type == "republic" ? "yes" : "no") + @"
 		            mercenary = no
 			        holy_order = no
@@ -176,7 +191,6 @@ namespace CrusaderKingsStoryGen
         }
         public Government Mutate(int numChanges)
         {
-          
             Government g = new Government();
 
             g.frame_suffix = frame_suffix;
@@ -215,7 +229,7 @@ namespace CrusaderKingsStoryGen
             g.allowed_holdings.AddRange(allowed_holdings);
             g.allowed_holdings_culture.AddRange(allowed_holdings_culture);
             g.allowed_holdings_culture_and_religion.AddRange(allowed_holdings_culture_and_religion);
-//            g.cultureAllow.AddRange(cultureAllow);
+            //            g.cultureAllow.AddRange(cultureAllow);
             g.builds_with_prestige.AddRange(builds_with_prestige);
             g.builds_with_piety.AddRange(builds_with_piety);
             g.color = color;
@@ -233,7 +247,6 @@ namespace CrusaderKingsStoryGen
                         case 1:
                             g.type = "republic";
                             break;
-
                     }
 
                     SetType(g.type);
@@ -244,7 +257,7 @@ namespace CrusaderKingsStoryGen
                 if (Rand.Next(3) == 0)
                 {
                     g.type = "feudal";
-                     
+
                     SetType(g.type);
                 }
             }
@@ -260,20 +273,19 @@ namespace CrusaderKingsStoryGen
                         case 1:
                             g.type = "feudal";
                             break;
-
                     }
 
                     SetType(g.type);
                 }
             }
 
-            
+
             if (type == "nomadic")
             {
                 if (Rand.Next(5) == 0 || GovernmentManager.instance.numNomadic > 10)
                 {
                     g.type = "tribal";
-           
+
                     SetType(g.type);
                 }
             }
@@ -291,56 +303,56 @@ namespace CrusaderKingsStoryGen
             if (type == "nomadic")
                 GovernmentManager.instance.numNomadic++;
 
-/*
-            if (Rand.Next(5) == 0)
-            {
-              
-                switch (Rand.Next(5))
-                {
-                    case 0:
-                        g.type = "feudal";
-                        g.can_build_castle = true;
-                        if (!g.allowed_holdings.Contains("CASTLE"))
-                            g.allowed_holdings.Add("CASTLE");
-                        if (!g.preferred_holdings.Contains("CASTLE"))
-                            g.preferred_holdings.Add("CASTLE");
-                       break;
-                    case 1:
-                        g.type = "tribal";
-                         g.preferred_holdings.Clear();
-                            g.allowed_holdings.Clear();
-                          g.allowed_holdings.Add("TRIBAL");
-                          g.preferred_holdings.Add("TRIBAL");
-                          g.can_build_tribal = true;
-                        break;
-                    case 2:
-                        g.type = "nomadic";
-                        g.preferred_holdings.Clear();
-                        g.allowed_holdings.Clear();
-                        g.allowed_holdings.Add("NOMAD");
-                        g.preferred_holdings.Add("NOMAD");
-                        break;
-                    case 3:
-                        g.type = "theocracy";
-                        if (!g.allowed_holdings.Contains("TEMPLE"))
-                            g.allowed_holdings.Add("TEMPLE");
-                        if (!g.preferred_holdings.Contains("TEMPLE"))
-                            g.preferred_holdings.Add("TEMPLE");
-                        g.can_build_temple = true;
-                        break;
-                    case 4:
-                        g.type = "republic";
-                        break;
-                }
-            }
-            */
+            /*
+                        if (Rand.Next(5) == 0)
+                        {
+
+                            switch (Rand.Next(5))
+                            {
+                                case 0:
+                                    g.type = "feudal";
+                                    g.can_build_castle = true;
+                                    if (!g.allowed_holdings.Contains("CASTLE"))
+                                        g.allowed_holdings.Add("CASTLE");
+                                    if (!g.preferred_holdings.Contains("CASTLE"))
+                                        g.preferred_holdings.Add("CASTLE");
+                                   break;
+                                case 1:
+                                    g.type = "tribal";
+                                     g.preferred_holdings.Clear();
+                                        g.allowed_holdings.Clear();
+                                      g.allowed_holdings.Add("TRIBAL");
+                                      g.preferred_holdings.Add("TRIBAL");
+                                      g.can_build_tribal = true;
+                                    break;
+                                case 2:
+                                    g.type = "nomadic";
+                                    g.preferred_holdings.Clear();
+                                    g.allowed_holdings.Clear();
+                                    g.allowed_holdings.Add("NOMAD");
+                                    g.preferred_holdings.Add("NOMAD");
+                                    break;
+                                case 3:
+                                    g.type = "theocracy";
+                                    if (!g.allowed_holdings.Contains("TEMPLE"))
+                                        g.allowed_holdings.Add("TEMPLE");
+                                    if (!g.preferred_holdings.Contains("TEMPLE"))
+                                        g.preferred_holdings.Add("TEMPLE");
+                                    g.can_build_temple = true;
+                                    break;
+                                case 4:
+                                    g.type = "republic";
+                                    break;
+                            }
+                        }
+                        */
 
 
             for (int n = 0; n < numChanges; n++)
             {
                 g.DoChange();
             }
-            if(!GovernmentManager.instance.governments.Contains(g))
+            if (!GovernmentManager.instance.governments.Contains(g))
                 GovernmentManager.instance.governments.Add(g);
             return g;
         }
@@ -380,10 +392,10 @@ namespace CrusaderKingsStoryGen
                     can_build_temple = true;
                     can_build_tribal = true;
                     can_create_kingdoms = true;
-                      frame_suffix = "_tribal";
+                    frame_suffix = "_tribal";
                     title_prefix = "tribal_";
                     is_patrician = false;
-                    can_change_to_nomad_on_start = true;
+                    _can_change_to_nomad_on_start = true;
                     break;
                 case "feudal":
                     allowed_holdings.Add("CASTLE");
@@ -475,7 +487,7 @@ namespace CrusaderKingsStoryGen
                         can_usurp_kingdoms_and_empires = true;
                     }
                     break;
-     
+
                 case 4:
                     can_create_kingdoms = !can_create_kingdoms;
                     break;
@@ -488,7 +500,7 @@ namespace CrusaderKingsStoryGen
                 case 7:
                     free_retract_vassalage = !free_retract_vassalage;
                     break;
-                 case 8:
+                case 8:
                     ignores_de_jure_laws = !ignores_de_jure_laws;
                     break;
                 case 9:
@@ -513,9 +525,7 @@ namespace CrusaderKingsStoryGen
                     if (uses_prestige_for_law_change)
                         uses_piety_for_law_change = false;
                     break;
-              
             }
-
         }
 
         private void DoPeaceyChanges()
@@ -527,6 +537,5 @@ namespace CrusaderKingsStoryGen
         {
             allow_looting = true;
         }
-
     }
 }

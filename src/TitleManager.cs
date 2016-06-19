@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -10,7 +26,7 @@ using CrusaderKingsStoryGen.Simulation;
 
 namespace CrusaderKingsStoryGen
 {
-    class TitleManager
+    internal class TitleManager
     {
         public static TitleManager instance = new TitleManager();
 
@@ -47,45 +63,41 @@ namespace CrusaderKingsStoryGen
         private void RemoveKingdomAndAbove()
         {
             var array = TieredTitles.Values.ToArray();
-            toTop.Clear();
+            _toTop.Clear();
             List<string> list = new List<string>();
             bool bActive = false;
             foreach (var titleParser in array)
             {
-                
                 {
-                //    if (bActive)
+                    //    if (bActive)
                     {
-                        if (titleParser.Rank==4)
+                        if (titleParser.Rank == 4)
                             list.Add(titleParser.Name);
                         else if (titleParser.Rank == 3)
                             list.Add(titleParser.Name);
                         else if (titleParser.Rank == 2)
                             list.Add(titleParser.Name);
-                        else if(titleParser.Rank == 1)
+                        else if (titleParser.Rank == 1)
                             titleParser.Liege = null;
                         else
                             list.Add(titleParser.Name);
                     }
                 }
-                
             }
-            
+
             foreach (var item in list)
             {
                 TieredTitles[item].Remove();
                 TitleMap.Remove(TieredTitles[item].Name);
                 Titles.Remove(TieredTitles[item]);
                 TieredTitles.Remove(item);
-                
             }
-            
         }
 
-        List<TitleParser> toTop = new List<TitleParser>(); 
+        private List<TitleParser> _toTop = new List<TitleParser>();
         private void PromoteAllToTop()
         {
-            toTop.Clear();
+            _toTop.Clear();
             var array = TieredTitles.Values.ToArray();
 
             foreach (var titleParser in array)
@@ -96,10 +108,9 @@ namespace CrusaderKingsStoryGen
                         continue;
                     PromoteToTop(subTitle.Value);
                 }
-
             }
 
-            foreach (var titleParser in toTop)
+            foreach (var titleParser in _toTop)
             {
                 LandedTitlesScript.Root.Add(titleParser.Scope);
                 titleParser.Scope.Parent = LandedTitlesScript.Root;
@@ -113,12 +124,12 @@ namespace CrusaderKingsStoryGen
                 return false;
             foreach (var titleParser in array)
             {
-                if(PromoteToTop(titleParser.Value))
+                if (PromoteToTop(titleParser.Value))
                     titleParser.Value.SubTitles.Clear();
             }
-            title.Scope.Parent.Remove(title.Scope);            
+            title.Scope.Parent.Remove(title.Scope);
             title.SubTitles.Clear();
-            toTop.Add(title);
+            _toTop.Add(title);
             return true;
         }
 
@@ -135,7 +146,7 @@ namespace CrusaderKingsStoryGen
             LandedTitlesScript.Save();
         }
 
-        private static String[] compositions = new[]
+        private static String[] s_compositions = new[]
         {
             "muslim_turkic_company_composition",
             "bedouin_company_composition",
@@ -202,8 +213,7 @@ namespace CrusaderKingsStoryGen
           "naval_merc_composition",
           "naval_merc_composition",
           "naval_merc_composition",
-       
-        };
+};
         public void CreateMercs()
         {
             // do mercs...
@@ -212,7 +222,7 @@ namespace CrusaderKingsStoryGen
                 String name = cultureParser.dna.GetMaleName();
                 String namesafe = "d_" + StarNames.SafeName(name);
                 LanguageManager.instance.Add(namesafe, name);
-                String composition = compositions[Rand.Next(compositions.Length)];
+                String composition = s_compositions[Rand.Next(s_compositions.Length)];
                 LandedTitlesScript.Root.Do(@"
 
                     " + namesafe + @" = {
@@ -252,7 +262,6 @@ namespace CrusaderKingsStoryGen
 
         public CharacterParser PromoteNewRuler(TitleParser title)
         {
-    
             {
                 var chara = CharacterManager.instance.GetNewCharacter();
 
@@ -260,8 +269,6 @@ namespace CrusaderKingsStoryGen
                 SimulationManager.instance.characters.Add(chara);
                 return chara;
             }
-
-
         }
 
         public TitleParser CreateDukeScriptScope(ProvinceParser capital, String name = null)
@@ -286,14 +293,14 @@ namespace CrusaderKingsStoryGen
             //  scope.Kids.Add(new ScriptCommand() { Name = "rebel", Value = false });
             scope.Add(new ScriptCommand() { Name = "color", Value = col });
             scope.Add(new ScriptCommand() { Name = "color2", Value = col });
-            
+
             scope.Add(new ScriptCommand() { Name = "capital", Value = capital.id });
-          
+
             TitleParser title = new TitleParser(scope);
-            
-  //          if (capital.Title.Culture.dna.horde)
-//                title.Scope.Do("historical_nomad = yes");
-            
+
+            //          if (capital.Title.Culture.dna.horde)
+            //                title.Scope.Do("historical_nomad = yes");
+
             AddTitle(title);
             if (title.capital != 0)
                 title.CapitalProvince = MapManager.instance.ProvinceIDMap[title.capital];
@@ -309,7 +316,7 @@ namespace CrusaderKingsStoryGen
             ScriptScope scope = new ScriptScope();
             scope.Parent = LandedTitlesScript.Root;
 
-            
+
             {
                 String place = chr.Culture.dna.GetPlaceName();
                 String text = place;
@@ -318,7 +325,7 @@ namespace CrusaderKingsStoryGen
                 scope.Name = "d_" + place;
                 LanguageManager.instance.Add(scope.Name, text);
             }
-           
+
             //  scope.Kids.Add(new ScriptCommand() { Name = "rebel", Value = false });
             scope.Add(new ScriptCommand() { Name = "color", Value = col });
             scope.Add(new ScriptCommand() { Name = "color2", Value = col });
@@ -326,8 +333,8 @@ namespace CrusaderKingsStoryGen
             scope.Add(new ScriptCommand() { Name = "capital", Value = capital.id });
 
             TitleParser title = new TitleParser(scope);
-  //          if (chr.Culture.dna.horde)
-//                title.Scope.Do("historical_nomad = yes");
+            //          if (chr.Culture.dna.horde)
+            //                title.Scope.Do("historical_nomad = yes");
             AddTitle(title);
             if (title.capital != 0)
                 title.CapitalProvince = MapManager.instance.ProvinceIDMap[title.capital];
@@ -349,19 +356,19 @@ namespace CrusaderKingsStoryGen
             ScriptScope scope = new ScriptScope();
             scope.Parent = capital.Title.Scope;
 
-            
-                scope.Name = "b_" + place;
-                LanguageManager.instance.Add("b_" + place, text);
+
+            scope.Name = "b_" + place;
+            LanguageManager.instance.Add("b_" + place, text);
             //  scope.Kids.Add(new ScriptCommand() { Name = "rebel", Value = false });
-         
+
             TitleParser title = new TitleParser(scope);
             TieredTitles[title.Name] = title;
             capital.Title.Scope.Add(title.Scope);
 
-  //          if (culture.dna.horde)
-//                title.Scope.Do("historical_nomad = yes");
-         //   AddTitle(title);
-         
+            //          if (culture.dna.horde)
+            //                title.Scope.Do("historical_nomad = yes");
+            //   AddTitle(title);
+
             return title;
         }
         public TitleParser CreateEmpireScriptScope(ProvinceParser capital, String name = null)
@@ -457,7 +464,7 @@ namespace CrusaderKingsStoryGen
 
             return title;
         }
-        
+
         public TitleParser CreateKingScriptScope(ProvinceParser capital, String name = null)
         {
             var rand = Rand.Get();
@@ -475,7 +482,7 @@ namespace CrusaderKingsStoryGen
             //scope.Kids.Add(new ScriptCommand() { Name = "rebel", Value = false });
             scope.Add(new ScriptCommand() { Name = "color", Value = col });
             scope.Add(new ScriptCommand() { Name = "color2", Value = col });
-        
+
             scope.Add(new ScriptCommand() { Name = "capital", Value = capital.id });
 
             TitleParser title = new TitleParser(scope);
@@ -500,15 +507,14 @@ namespace CrusaderKingsStoryGen
                 title.SubTitles[titleParser.Name] = titleParser;
                 if (title.Liege == titleParser || title.Liege == title)
                     title.Liege = null;
-                titleParser.Liege = title;                
+                titleParser.Liege = title;
             }
-            
         }
 
-     
+
         public void AddTitle(TitleParser title)
         {
-         //   Titles.Add(title);
+            //   Titles.Add(title);
             TieredTitles[title.Name] = title;
             LandedTitlesScript.Root.Add(title.Scope);
             title.Scope.Parent = LandedTitlesScript.Root;
@@ -516,14 +522,13 @@ namespace CrusaderKingsStoryGen
 
         public void SaveTitles()
         {
-
             foreach (var titleParser in Titles)
             {
                 if (titleParser.culture == null)
                     continue;
 
                 String tit = titleParser.Culture.dna.kingTitle;
-           
+
                 switch (titleParser.Rank)
                 {
                     case 0:
@@ -560,29 +565,28 @@ namespace CrusaderKingsStoryGen
                     religionParser.DoLeader(religionParser.Believers[Rand.Next(religionParser.Believers.Count)]);
                 }
             }
-             if(!Directory.Exists(Globals.ModDir + "history/titles/"))
+            if (!Directory.Exists(Globals.ModDir + "history/titles/"))
                 Directory.CreateDirectory(Globals.ModDir + "history/titles/");
             var files = Directory.GetFiles(Globals.ModDir + "history/titles/");
             foreach (var file in files)
             {
                 File.Delete(file);
             }
-             foreach (var title in Titles)
+            foreach (var title in Titles)
             {
                 if (!title.Active)
                     continue;
                 if (title.Religious)
                 {
-                    
                 }
                 Script titleScript = ScriptLoader.instance.Load(Globals.GameDir + "history/titles/" + title + ".txt");
-                
+
                 titleScript.Root.Clear();
-               
-               
+
+
 
                 {
-                   if (titleScript.Root.HasNamed("1066.1.1"))
+                    if (titleScript.Root.HasNamed("1066.1.1"))
                     {
                         titleScript.Root.Delete("1066.1.1");
                     }
@@ -592,36 +596,30 @@ namespace CrusaderKingsStoryGen
                         titleScript.Root.SetChild(thing);
                         if (title.Culture.dna.horde)
                             thing.Add(new ScriptCommand() { Name = "historical_nomad", Value = true });
-                           
+
                         if (title.Liege != null)
                         {
                             thing.Add(new ScriptCommand() { Name = "liege", Value = title.Liege.Name });
-                            
                         }
 
-                         if (title.Holder != null)
+                        if (title.Holder != null)
                         {
-                            thing.Add(new ScriptCommand() { Name = "holder", Value = title.Holder.ID });    
-                        
-                       //     title.Holder.MakeAlive();
-                        }else if (title.SubTitles.Count > 0 && title.Rank >= 2 && title.Holder == null)
-                        {
+                            thing.Add(new ScriptCommand() { Name = "holder", Value = title.Holder.ID });
 
+                            //     title.Holder.MakeAlive();
+                        }
+                        else if (title.SubTitles.Count > 0 && title.Rank >= 2 && title.Holder == null)
+                        {
                             thing.Add(new ScriptCommand() { Name = "holder", Value = title.SubTitles.Values.ToArray()[0].Holder.ID });
-                        //    title.SubTitles.Values.ToArray()[0].Holder.MakeAlive();
+                            //    title.SubTitles.Values.ToArray()[0].Holder.MakeAlive();
                         }
-                         if (title.CurrentHolder != null)
-                         {
-                             thing.Add(new ScriptCommand() { Name = "holder", Value = title.CurrentHolder.ID });
-
-                         }
-                      
-                    
+                        if (title.CurrentHolder != null)
+                        {
+                            thing.Add(new ScriptCommand() { Name = "holder", Value = title.CurrentHolder.ID });
+                        }
                     }
-
-
                 }
-              
+
                 titleScript.Save();
             }
         }
@@ -639,7 +637,5 @@ namespace CrusaderKingsStoryGen
             TitleMap.Remove(titleParser.Name);
             LandedTitlesScript.Root.Remove(titleParser.Scope);
         }
-
-       
     }
 }

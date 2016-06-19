@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace CrusaderKingsStoryGen
 {
-    class EventNamespace
+    internal class EventNamespace
     {
         public String name;
         public List<EventParser> events = new List<EventParser>();
@@ -18,10 +34,10 @@ namespace CrusaderKingsStoryGen
             this.name = name;
         }
     }
-    class EventManager
+    internal class EventManager
     {
         public static EventManager instance = new EventManager();
-        public List<Script>  Scripts = new List<Script>();
+        public List<Script> Scripts = new List<Script>();
         public void AddToNamespace(String names, EventParser ev)
         {
             EventNamespace e = null;
@@ -41,14 +57,14 @@ namespace CrusaderKingsStoryGen
         public void Load()
         {
             var files = Directory.GetFiles(Globals.GameDir + "events");
-            
+
             foreach (var file in files)
             {
                 Script s = ScriptLoader.instance.Load(file);
                 string names = null;
                 foreach (var child in s.Root.Children)
                 {
-                    if(child is ScriptCommand)
+                    if (child is ScriptCommand)
                     {
                         if (child.ToString().Contains("namespace"))
                         {
@@ -61,7 +77,7 @@ namespace CrusaderKingsStoryGen
                     Events.Add(ee);
 
                     EventMap[(sc.Find("id") as ScriptCommand).Value.ToString()] = ee;
-                    if(names != null)
+                    if (names != null)
                         AddToNamespace(names, ee);
                 }
                 Scripts.Add(s);
@@ -75,16 +91,14 @@ namespace CrusaderKingsStoryGen
             var ev = EventMap["TOG.1200"];
 
             var e = ev;
-
-
         }
 
         public void Save()
         {
             foreach (var script in Scripts)
             {
-            //    RemoveAllReligionTests(script.Root);
-        //        script.Save();
+                //    RemoveAllReligionTests(script.Root);
+                //        script.Save();
             }
         }
 
@@ -106,13 +120,11 @@ namespace CrusaderKingsStoryGen
                     {
                         if (c.Value.ToString().ToUpper() == "FROM" || c.Value.ToString().ToUpper() == "ROOT" || c.Value.ToString().ToUpper().Contains("PREV"))
                         {
-
                         }
                         else
                         {
                             node.Remove(child);
                             index--;
-
                         }
                         continue;
                     }
@@ -120,13 +132,11 @@ namespace CrusaderKingsStoryGen
                     {
                         if (c.Value.ToString().ToUpper() == "FROM" || c.Value.ToString().ToUpper() == "ROOT" || c.Value.ToString().ToUpper().Contains("PREV"))
                         {
-
                         }
                         else
                         {
                             node.Remove(child);
                             index--;
-
                         }
                         continue;
                     }

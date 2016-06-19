@@ -1,10 +1,26 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CrusaderKingsStoryGen
 {
-    class ReligionGroupParser : Parser
+    internal class ReligionGroupParser : Parser
     {
         public List<ReligionParser> Religions = new List<ReligionParser>();
 
@@ -36,9 +52,9 @@ namespace CrusaderKingsStoryGen
                 r.Group.Scope.Remove(r.Scope);
             }
             Scope.Add(r.Scope);
-            Religions.Add(r);            
+            Religions.Add(r);
         }
-        public ReligionParser AddReligion(String name, String orig=null)
+        public ReligionParser AddReligion(String name, String orig = null)
         {
             if (name != "pagan")
             {
@@ -48,8 +64,8 @@ namespace CrusaderKingsStoryGen
                 orig = oname;
             }
 
-       
-            
+
+
             ScriptScope scope = new ScriptScope();
             scope.Name = name;
             Scope.Add(scope);
@@ -63,7 +79,7 @@ namespace CrusaderKingsStoryGen
             ReligionManager.instance.ReligionMap[name] = r;
             return r;
         }
-        static string[] gfx = new string[]
+        private static string[] s_gfx = new string[]
             {
                 "muslimgfx",
                 "westerngfx",
@@ -82,9 +98,8 @@ namespace CrusaderKingsStoryGen
         public bool hostile_within_group = false;
         public void Init()
         {
-
             hostile_within_group = Rand.Next(2) == 0;
-            String g = gfx[Rand.Next(gfx.Count())];
+            String g = s_gfx[Rand.Next(s_gfx.Count())];
             Scope.Clear();
             Scope.Do(@"
 
@@ -104,14 +119,6 @@ namespace CrusaderKingsStoryGen
 	            }
 
 ");
-         
-
         }
-		
-		
-
-     
-
-        
     }
 }
