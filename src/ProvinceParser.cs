@@ -1,3 +1,19 @@
+// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +22,7 @@ using CrusaderKingsStoryGen.Simulation;
 
 namespace CrusaderKingsStoryGen
 {
-    class ProvinceParser :  Parser
+    internal class ProvinceParser : Parser
     {
         public String Name { get; set; }
         public int id;
@@ -16,7 +32,7 @@ namespace CrusaderKingsStoryGen
         public String title { get; set; }
         public int max_settlements { get; set; }
         public TitleParser ProvinceOwner { get; set; }
-        public List<Barony> baronies = new List<Barony>(); 
+        public List<Barony> baronies = new List<Barony>();
         public void Save()
         {
             if (title == null)
@@ -52,11 +68,10 @@ namespace CrusaderKingsStoryGen
             {
                 s.Root.Add(new ScriptCommand("culture", Title.Holder.culture, s.Root));
                 s.Root.Add(new ScriptCommand("religion", Title.Holder.religion, s.Root));
-                
             }
             if (MapManager.instance.LoadedTerrain.ContainsKey(id))
                 s.Root.Add(new ScriptCommand("terrain", MapManager.instance.LoadedTerrain[id], s.Root));
-        
+
             foreach (var barony in baronies)
             {
                 s.Root.Add(new ScriptCommand(barony.title, barony.type, s.Root));
@@ -89,10 +104,8 @@ namespace CrusaderKingsStoryGen
             {
                 Title.Rename(name);
             }
-          
-             Rename(name);
-           
-            
+
+            Rename(name);
         }
         public void AddTemple(CultureParser culture)
         {
@@ -113,30 +126,28 @@ namespace CrusaderKingsStoryGen
                     case "tribal":
                     case "nomadic":
                         AddBarony("tribal", culture);
-                    break;
+                        break;
                     case "republic":
-                    AddBarony("town", culture);
+                        AddBarony("town", culture);
 
-                    break;
+                        break;
                     case "theocracy":
-                    AddBarony("temple", culture);
+                        AddBarony("temple", culture);
 
-                    break;
+                        break;
                     case "feudal":
-                    AddBarony("castle", culture);
+                        AddBarony("castle", culture);
 
-                    break;
+                        break;
                 }
             }
-          
         }
 
         public void AddBarony(CultureParser culture)
         {
             if (Rand.Next(4) != 0)
             {
-       
-                    AddBarony("castle", culture);
+                AddBarony("castle", culture);
             }
             else
             {
@@ -147,7 +158,6 @@ namespace CrusaderKingsStoryGen
                 else
                 {
                     AddBarony("city", culture);
-
                 }
             }
         }
@@ -163,8 +173,7 @@ namespace CrusaderKingsStoryGen
                 else
                 {
                     AddBarony("city", culture);
-
-                } 
+                }
             }
             else
             {
@@ -206,7 +215,8 @@ namespace CrusaderKingsStoryGen
                     return null;
                 if (!TitleManager.instance.TitleMap.ContainsKey(title))
                     return null;
-                return TitleManager.instance.TitleMap[title]; }
+                return TitleManager.instance.TitleMap[title];
+            }
         }
 
         public List<Point> Points = new List<Point>();
@@ -223,16 +233,13 @@ namespace CrusaderKingsStoryGen
                 if (child is ScriptCommand)
                 {
                     RegisterProperty(line, ((child as ScriptCommand).Name), child);
-
                 }
                 line++;
                 if (child is ScriptScope)
                 {
                     var subscope = (child as ScriptScope);
-                   
                 }
             }
-           
         }
 
         public void DoTitleOwnership()
@@ -285,15 +292,15 @@ namespace CrusaderKingsStoryGen
             {
                 if (child is ScriptCommand)
                 {
-                    ScriptCommand c = (ScriptCommand) child;
+                    ScriptCommand c = (ScriptCommand)child;
 
                     if (c.Name.StartsWith("b_"))
                     {
                         String str = c.Value.ToString();
-                    
+
                         if (c.Value.ToString() == "temple")
                         {
-                            var t = new Barony() {type = c.Value.ToString(), title = c.Name, province = this};
+                            var t = new Barony() { type = c.Value.ToString(), title = c.Name, province = this };
                             Temples.Add(t);
                             MapManager.instance.Temples[c.Name] = t;
                         }
@@ -305,9 +312,9 @@ namespace CrusaderKingsStoryGen
         public TitleParser CreateTitle()
         {
             this.title = this.Name;
-        //    string n = culture.dna.GetPlaceName();
-         //   String sn = StarNames.SafeName(n);
-          //  this.Name = "c_" + sn;
+            //    string n = culture.dna.GetPlaceName();
+            //   String sn = StarNames.SafeName(n);
+            //  this.Name = "c_" + sn;
             var scope = new ScriptScope();
             scope.Name = this.title;
             var c = new TitleParser(scope);
@@ -326,6 +333,5 @@ namespace CrusaderKingsStoryGen
 
             return this.Title.Holder;
         }
-
     }
 }

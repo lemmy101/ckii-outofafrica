@@ -1,11 +1,27 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CrusaderKingsStoryGen.Simulation;
 
 namespace CrusaderKingsStoryGen
 {
-    class ReligionParser : Parser
+    internal class ReligionParser : Parser
     {
         public ReligionGroupParser Group
         {
@@ -15,7 +31,7 @@ namespace CrusaderKingsStoryGen
             }
         }
         public List<ProvinceParser> Believers = new List<ProvinceParser>();
-        private ProvinceParser capital;
+        private ProvinceParser _capital;
         public bool Modern { get; set; }
         public HashSet<ProvinceParser> holySites = new HashSet<ProvinceParser>();
         public ReligionParser(ScriptScope scope) : base(scope)
@@ -27,7 +43,7 @@ namespace CrusaderKingsStoryGen
         {
             return null;
         }
-  
+
         public ReligionParser BranchReligion(String name)
         {
             ScriptScope scope = new ScriptScope();
@@ -38,58 +54,57 @@ namespace CrusaderKingsStoryGen
             return r;
         }
 
-       
+
         public void RandomReligionProperties()
         {
-
-            this.divine_blood = Rand.Next(2) == 0;;
-            this.female_temple_holders =Rand.Next(2)==0;
-            this.priests_can_inherit = Rand.Next(2) == 0;
-
+            _divine_blood = Rand.Next(2) == 0; ;
+            _female_temple_holders = Rand.Next(2) == 0;
+            _priests_can_inherit = Rand.Next(2) == 0;
 
 
-            matrilineal_marriages = Rand.Next(4) != 0;
-            
+
+            _matrilineal_marriages = Rand.Next(4) != 0;
+
             bool warLike = Rand.Next(2) == 0;
-            if(Rand.Next(2)==0)
+            if (Rand.Next(2) == 0)
                 Resilience = Rand.Next(2);
             else
                 Resilience = Rand.Next(5);
             if (warLike)
             {
-                this.allow_looting = true;
-                this.allow_viking_invasion = true;
-                this.can_call_crusade = true;
+                _allow_looting = true;
+                _allow_viking_invasion = true;
+                _can_call_crusade = true;
                 if (Rand.Next(2) == 0)
                 {
-                    this.peace_prestige_loss = true;
+                    _peace_prestige_loss = true;
                 }
             }
             else
             {
                 if (Rand.Next(5) == 0)
                 {
-                    this.pacifist = true;
+                    _pacifist = true;
                 }
-                if(Rand.Next(2)==0)
-                    this.can_call_crusade = false;
+                if (Rand.Next(2) == 0)
+                    _can_call_crusade = false;
             }
 
-            this.polytheism = Rand.Next(2) == 0;
-         //   this.polytheism = true;
-            if (polytheism)
+            _polytheism = Rand.Next(2) == 0;
+            //   this.polytheism = true;
+            if (_polytheism)
                 this.hasLeader = false;//Rand.Next(3) == 0;
             else
                 this.hasLeader = true;
-         
-            this.can_grant_claim = Rand.Next(3) != 0;
-            this.can_grant_divorce = Rand.Next(2) != 0;
-            this.can_excommunicate = Rand.Next(2) != 0;
-            this.can_hold_temples = Rand.Next(3) != 0;
-            this.can_retire_to_monastery = Rand.Next(2) != 0;
-            this.can_have_antipopes = Rand.Next(2) != 0 && hasLeader;
-            this.autocephaly = false;//Rand.Next(3) == 0;
-            investiture = Rand.Next(2) == 0 && hasLeader;
+
+            _can_grant_claim = Rand.Next(3) != 0;
+            _can_grant_divorce = Rand.Next(2) != 0;
+            _can_excommunicate = Rand.Next(2) != 0;
+            _can_hold_temples = Rand.Next(3) != 0;
+            _can_retire_to_monastery = Rand.Next(2) != 0;
+            _can_have_antipopes = Rand.Next(2) != 0 && hasLeader;
+            _autocephaly = false;//Rand.Next(3) == 0;
+            _investiture = Rand.Next(2) == 0 && hasLeader;
             this.icon = Rand.Next(52) + 1;
             this.heresy_icon = Rand.Next(52) + 1;
             if (Rand.Next(2) == 0)
@@ -97,33 +112,31 @@ namespace CrusaderKingsStoryGen
             else
                 this.ai_convert_other_group = 2;
 
-            this.has_heir_designation = Rand.Next(4) == 0;
+            _has_heir_designation = Rand.Next(4) == 0;
 
             if (Rand.Next(2) == 0)
             {
                 if (Rand.Next(2) == 0)
                 {
                     max_consorts = 1 + Rand.Next(5);
-
                 }
                 else
                 {
-
                     {
                         max_wives = 2 + Rand.Next(4);
                     }
                 }
             }
-          
+
 
             if (Rand.Next(6) == 0)
             {
-                this.bs_marriage = true;
+                _bs_marriage = true;
                 if (Rand.Next(3) == 0)
-                    this.pc_marriage = true;
+                    _pc_marriage = true;
             }
 
-          
+
 
             religious_clothing_head = Rand.Next(4);
             religious_clothing_priest = Rand.Next(4);
@@ -143,7 +156,7 @@ namespace CrusaderKingsStoryGen
                 }
                 return;
             }
-           
+
             {
                 var chosen = Believers[Rand.Next(Believers.Count)];
                 chosen.AddTemple(chosen.Title.Culture);
@@ -151,24 +164,24 @@ namespace CrusaderKingsStoryGen
                 holySites.Add(chosen);
             }
         }
-        List<String> gods = new List<string>();
-        List<String> evilgods = new List<string>();
+        private List<String> _gods = new List<string>();
+        private List<String> _evilgods = new List<string>();
 
         public void CreateRandomReligion(ReligionGroupParser group)
         {
             String culture = "";
             CulturalDna dna = null;
-            if (this.capital == null)
+            if (_capital == null)
             {
-                dna = CulturalDnaManager.instance.GetVanillaCulture((string) null);
+                dna = CulturalDnaManager.instance.GetVanillaCulture((string)null);
             }
             else
             {
-                culture = capital.Title.Holder.culture;
+                culture = _capital.Title.Holder.culture;
                 dna = CultureManager.instance.CultureMap[culture].dna;
             }
             RandomReligionProperties();
-      //     Modern = true;
+            //     Modern = true;
             int r = Rand.Next(255);
             int g = Rand.Next(255);
             int b = Rand.Next(255);
@@ -180,11 +193,11 @@ namespace CrusaderKingsStoryGen
             string crusade_name = dna.GetPlaceName();
 
             this.high_god_name = god;
-            
-            this.devil = devil;
-            this.priest = priest;
-            this.scripture_name = scripture_name;
-            this.crusade_name = crusade_name;
+
+            _devil = devil;
+            _priest = priest;
+            _scripture_name = scripture_name;
+            _crusade_name = crusade_name;
 
             DoReligionScope(god, devil, priest, scripture_name, crusade_name, dna, r, g, b);
         }
@@ -200,7 +213,7 @@ namespace CrusaderKingsStoryGen
             string safecrusade_name = StarNames.SafeName(crusade_name);
             String desc = "";
 
-            if (!polytheism)
+            if (!_polytheism)
                 desc = "All praise the almighty " + high_god_name + "!";
             else
                 desc = "The Gods smile upon you.";
@@ -226,7 +239,7 @@ namespace CrusaderKingsStoryGen
                     var sg = StarNames.SafeName(go);
                     LanguageManager.instance.Add(sg, go);
 
-                    this.gods.Add(sg);
+                    _gods.Add(sg);
                     gods += sg + " ";
                 }
             }
@@ -238,13 +251,13 @@ namespace CrusaderKingsStoryGen
                 string go = dna.GetGodName();
                 var sg = StarNames.SafeName(go);
                 LanguageManager.instance.Add(sg, go);
-                this.evilgods.Add(sg);
+                _evilgods.Add(sg);
 
                 egods += sg + " ";
             }
 
 
-            if (!polytheism)
+            if (!_polytheism)
             {
                 gods = safegod;
                 egods = safedevil;
@@ -283,36 +296,36 @@ namespace CrusaderKingsStoryGen
 			           " + egods + @"
 		            }
 		
-		            investiture = " + (investiture ? "yes" : "no") + @"
-		            can_have_antipopes  = " + (can_have_antipopes ? "yes" : "no") + @"
-		            can_excommunicate  = " + (can_excommunicate ? "yes" : "no") + @"
-		            can_grant_divorce  = " + (can_grant_divorce ? "yes" : "no") + @"
-		            can_grant_claim  = " + (can_grant_claim ? "yes" : "no") + @"
-		            can_call_crusade  = " + (can_call_crusade ? "yes" : "no") + @"
-		            can_retire_to_monastery  = " + (can_retire_to_monastery ? "yes" : "no") + @"
-		            priests_can_inherit  = " + (priests_can_inherit ? "yes" : "no") + @"
-		            can_hold_temples  = " + (can_hold_temples ? "yes" : "no") + @"
-		            pacifist  = " + (pacifist ? "yes" : "no") + @"
+		            investiture = " + (_investiture ? "yes" : "no") + @"
+		            can_have_antipopes  = " + (_can_have_antipopes ? "yes" : "no") + @"
+		            can_excommunicate  = " + (_can_excommunicate ? "yes" : "no") + @"
+		            can_grant_divorce  = " + (_can_grant_divorce ? "yes" : "no") + @"
+		            can_grant_claim  = " + (_can_grant_claim ? "yes" : "no") + @"
+		            can_call_crusade  = " + (_can_call_crusade ? "yes" : "no") + @"
+		            can_retire_to_monastery  = " + (_can_retire_to_monastery ? "yes" : "no") + @"
+		            priests_can_inherit  = " + (_priests_can_inherit ? "yes" : "no") + @"
+		            can_hold_temples  = " + (_can_hold_temples ? "yes" : "no") + @"
+		            pacifist  = " + (_pacifist ? "yes" : "no") + @"
 		           
-                    bs_marriage  = " + (bs_marriage ? "yes" : "no") + @"
-		            pc_marriage  = " + (pc_marriage ? "yes" : "no") + @"
-		            psc_marriage  = " + (psc_marriage ? "yes" : "no") + @"
-		            cousin_marriage  = " + (psc_marriage ? "yes" : "no") + @"
-		            matrilineal_marriages  = " + (matrilineal_marriages ? "yes" : "no") + @"
-		            allow_viking_invasion  = " + (allow_viking_invasion ? "yes" : "no") + @"
-		            allow_looting  = " + (allow_looting ? "yes" : "no") + @"
-		            allow_rivermovement  = " + (allow_rivermovement ? "yes" : "no") + @"
-		            female_temple_holders  = " + (female_temple_holders ? "yes" : "no") + @"
-		            autocephaly  = " + (autocephaly ? "yes" : "no") + @"
-		            divine_blood  = " + (divine_blood ? "yes" : "no") + @"
-		            has_heir_designation  = " + (has_heir_designation ? "yes" : "no") + @"
-		            peace_prestige_loss  = " + (peace_prestige_loss ? "yes" : "no") + @"
+                    bs_marriage  = " + (_bs_marriage ? "yes" : "no") + @"
+		            pc_marriage  = " + (_pc_marriage ? "yes" : "no") + @"
+		            psc_marriage  = " + (_psc_marriage ? "yes" : "no") + @"
+		            cousin_marriage  = " + (_psc_marriage ? "yes" : "no") + @"
+		            matrilineal_marriages  = " + (_matrilineal_marriages ? "yes" : "no") + @"
+		            allow_viking_invasion  = " + (_allow_viking_invasion ? "yes" : "no") + @"
+		            allow_looting  = " + (_allow_looting ? "yes" : "no") + @"
+		            allow_rivermovement  = " + (_allow_rivermovement ? "yes" : "no") + @"
+		            female_temple_holders  = " + (_female_temple_holders ? "yes" : "no") + @"
+		            autocephaly  = " + (_autocephaly ? "yes" : "no") + @"
+		            divine_blood  = " + (_divine_blood ? "yes" : "no") + @"
+		            has_heir_designation  = " + (_has_heir_designation ? "yes" : "no") + @"
+		            peace_prestige_loss  = " + (_peace_prestige_loss ? "yes" : "no") + @"
 		         
 		            " + (max_consorts > 0 ? ("max_consorts = " + max_consorts.ToString()) : "") + @"
 		
                     max_wives  = " + max_wives + @"
 		            uses_decadence = " + (uses_decadence ? "yes" : "no") + @"
-                    uses_jizya_tax = " + (uses_jizya_tax ? "yes" : "no") + @"
+                    uses_jizya_tax = " + (_uses_jizya_tax ? "yes" : "no") + @"
           
                     can_grant_invasion_cb = invasion
 		            
@@ -328,30 +341,30 @@ namespace CrusaderKingsStoryGen
         public int religious_clothing_priest = 1;
         public int max_wives = 1;
         public int max_consorts = 0;
-        private bool investiture = true;
-        private bool can_have_antipopes = true;
-        private bool can_excommunicate = true;
-        private bool can_grant_divorce = true;
-        private bool can_grant_claim = true;
-        private bool can_call_crusade = true;
-        private bool can_retire_to_monastery = true;
-        private bool priests_can_inherit = false;
-        private bool can_hold_temples = true;
-        private bool pacifist = false;
-        private bool bs_marriage = false;
-        private bool pc_marriage = false;
-        private bool psc_marriage = false;
-        private bool matrilineal_marriages = true;
+        private bool _investiture = true;
+        private bool _can_have_antipopes = true;
+        private bool _can_excommunicate = true;
+        private bool _can_grant_divorce = true;
+        private bool _can_grant_claim = true;
+        private bool _can_call_crusade = true;
+        private bool _can_retire_to_monastery = true;
+        private bool _priests_can_inherit = false;
+        private bool _can_hold_temples = true;
+        private bool _pacifist = false;
+        private bool _bs_marriage = false;
+        private bool _pc_marriage = false;
+        private bool _psc_marriage = false;
+        private bool _matrilineal_marriages = true;
 
-     
-        private bool allow_viking_invasion = false;
-        private bool allow_looting = false;
-        private bool allow_rivermovement = false;
-        private bool female_temple_holders = false;
-        private bool autocephaly = false;
-        private bool divine_blood = false;
-        private bool has_heir_designation = false;
-        private bool peace_prestige_loss = false;
+
+        private bool _allow_viking_invasion = false;
+        private bool _allow_looting = false;
+        private bool _allow_rivermovement = false;
+        private bool _female_temple_holders = false;
+        private bool _autocephaly = false;
+        private bool _divine_blood = false;
+        private bool _has_heir_designation = false;
+        private bool _peace_prestige_loss = false;
         public bool hasLeader = true;
 
 
@@ -366,7 +379,7 @@ namespace CrusaderKingsStoryGen
             switch (Rand.Next(3))
             {
                 case 0:
-                   title = TitleManager.instance.CreateKingScriptScope(capital, Name);
+                    title = TitleManager.instance.CreateKingScriptScope(capital, Name);
                     break;
                 case 1:
                     title = TitleManager.instance.CreateEmpireScriptScope(capital, Name);
@@ -375,7 +388,7 @@ namespace CrusaderKingsStoryGen
                     title = TitleManager.instance.CreateDukeScriptScope(capital, Name);
                     break;
             }
-     
+
             ReligiousHeadTitle = title;
             ReligiousHeadTitle.Religious = true;
             ReligiousHeadTitle.Active = true;
@@ -384,9 +397,9 @@ namespace CrusaderKingsStoryGen
             ch.religion = Name;
             ch.UpdateCultural();
             var liege = ReligiousHeadTitle.CapitalProvince.Title;
-            if(Rand.Next(3)==0)
+            if (Rand.Next(3) == 0)
                 ch.GiveTitle(ReligiousHeadTitle.CapitalProvince.Title);
-             String religious_names = "";
+            String religious_names = "";
 
             for (int n = 0; n < 40; n++)
             {
@@ -409,79 +422,79 @@ namespace CrusaderKingsStoryGen
 
 ");
 
-       
-                
+
+
             LanguageManager.instance.Add(title.Name, this.LanguageName);
         }
         public TitleParser ReligiousHeadTitle { get; set; }
 
         public string LanguageName { get; set; }
         public int Resilience = 0;
-        private bool polytheism = true;
+        private bool _polytheism = true;
         public string high_god_name;
-        private string devil;
-        private string priest;
-        private string scripture_name;
-        private string crusade_name;
+        private string _devil;
+        private string _priest;
+        private string _scripture_name;
+        private string _crusade_name;
         public int r;
         public int g;
         public int b;
-        private CulturalDna dna;
+        private CulturalDna _dna;
         public bool uses_decadence;
-        private bool uses_jizya_tax;
-      
+        private bool _uses_jizya_tax;
+
         public void MakeChange()
         {
             switch (Rand.Next(24))
             {
                 case 0:
-                {
-                    bool warLike = Rand.Next(2) == 0;
-                    if (Rand.Next(2) == 0)
-                        Resilience = Rand.Next(2);
-                    else
-                        Resilience = Rand.Next(5);
-                    if (warLike)
                     {
-                        this.allow_looting = true;
-                        this.allow_viking_invasion = true;
-                        this.can_call_crusade = true;
+                        bool warLike = Rand.Next(2) == 0;
                         if (Rand.Next(2) == 0)
+                            Resilience = Rand.Next(2);
+                        else
+                            Resilience = Rand.Next(5);
+                        if (warLike)
                         {
-                            this.peace_prestige_loss = true;
+                            _allow_looting = true;
+                            _allow_viking_invasion = true;
+                            _can_call_crusade = true;
+                            if (Rand.Next(2) == 0)
+                            {
+                                _peace_prestige_loss = true;
+                            }
+                        }
+                        else
+                        {
+                            if (Rand.Next(5) == 0)
+                            {
+                                _pacifist = true;
+                            }
+                            if (Rand.Next(2) == 0)
+                                _can_call_crusade = false;
                         }
                     }
-                    else
-                    {
-                        if (Rand.Next(5) == 0)
-                        {
-                            this.pacifist = true;
-                        }
-                        if (Rand.Next(2) == 0)
-                            this.can_call_crusade = false;
-                    }
-                }
                     break;
                 case 1:
-                    this.can_grant_claim = Rand.Next(3) != 0;
+                    _can_grant_claim = Rand.Next(3) != 0;
                     break;
                 case 2:
-                    this.can_grant_divorce = Rand.Next(2) != 0;
+                    _can_grant_divorce = Rand.Next(2) != 0;
                     break;
                 case 3:
-                    this.can_excommunicate = Rand.Next(2) != 0;
+                    _can_excommunicate = Rand.Next(2) != 0;
                     break;
                 case 4:
-                    this.can_hold_temples = Rand.Next(3) != 0;
+                    _can_hold_temples = Rand.Next(3) != 0;
                     break;
                 case 5:
-                    this.can_retire_to_monastery = Rand.Next(2) != 0;
+                    _can_retire_to_monastery = Rand.Next(2) != 0;
                     break;
                 case 6:
-                    this.can_have_antipopes = Rand.Next(2) != 0 && hasLeader;
+                    _can_have_antipopes = Rand.Next(2) != 0 && hasLeader;
                     break;
                 case 7:
-                    investiture = Rand.Next(2) == 0 && hasLeader;
+                    _investiture = Rand.Next(2) == 0 && hasLeader;
                     break;
                 case 8:
                     if (Rand.Next(2) == 0)
@@ -491,7 +504,7 @@ namespace CrusaderKingsStoryGen
                     break;
                 case 9:
 
-                    this.has_heir_designation = Rand.Next(4) == 0;
+                    _has_heir_designation = Rand.Next(4) == 0;
 
                     break;
                 case 10:
@@ -501,11 +514,9 @@ namespace CrusaderKingsStoryGen
                         if (Rand.Next(2) == 0)
                         {
                             max_consorts = 1 + Rand.Next(5);
-
                         }
                         else
                         {
-
                             {
                                 max_wives = 2 + Rand.Next(4);
                             }
@@ -518,9 +529,9 @@ namespace CrusaderKingsStoryGen
 
                     if (Rand.Next(6) == 0)
                     {
-                        this.bs_marriage = true;
+                        _bs_marriage = true;
                         if (Rand.Next(3) == 0)
-                            this.pc_marriage = true;
+                            _pc_marriage = true;
                     }
 
 
@@ -535,46 +546,46 @@ namespace CrusaderKingsStoryGen
                     break;
                 case 13:
 
-                    high_god_name = dna.GetGodName();
+                    high_god_name = _dna.GetGodName();
 
                     break;
                 case 14:
 
-                    devil = dna.GetGodName();
+                    _devil = _dna.GetGodName();
 
                     break;
                 case 15:
 
-                    scripture_name = dna.GetGodName();
+                    _scripture_name = _dna.GetGodName();
 
                     break;
                 case 16:
 
-                    crusade_name = dna.GetGodName();
+                    _crusade_name = _dna.GetGodName();
 
                     break;
                 case 17:
 
-                    priest = dna.GetGodName();
+                    _priest = _dna.GetGodName();
 
                     break;
                 case 18:
 
-                    matrilineal_marriages = !matrilineal_marriages;
+                    _matrilineal_marriages = !_matrilineal_marriages;
 
                     break;
                 case 19:
 
-               this.divine_blood = Rand.Next(2) == 0; ;
-      
+                    _divine_blood = Rand.Next(2) == 0; ;
+
                     break;
                 case 20:
 
-                    this.female_temple_holders = !female_temple_holders;
-      
+                    _female_temple_holders = !_female_temple_holders;
+
                     break;
                 case 21:
-                    this.priests_can_inherit = !priests_can_inherit;
+                    _priests_can_inherit = !_priests_can_inherit;
 
                     break;
                 case 22:
@@ -582,55 +593,50 @@ namespace CrusaderKingsStoryGen
 
                     break;
                 case 23:
-                    this.uses_jizya_tax = !uses_jizya_tax;
+                    _uses_jizya_tax = !_uses_jizya_tax;
 
                     break;
             }
-
-
-       
-          
-
-          }
+        }
         public void Mutate(ReligionParser rel, CultureParser culture, int nChanges)
         {
-            this.dna = culture.dna;
+            _dna = culture.dna;
             this.ai_convert_other_group = rel.ai_convert_other_group;
-            
+
             this.max_consorts = rel.max_consorts;
             this.max_wives = rel.max_wives;
             this.religious_clothing_head = rel.religious_clothing_head;
             this.religious_clothing_priest = rel.religious_clothing_priest;
-            this.allow_looting = rel.allow_looting;
-            this.allow_rivermovement = rel.allow_rivermovement;
-            this.allow_viking_invasion = rel.allow_viking_invasion;
-            this.autocephaly = rel.autocephaly;
-            this.bs_marriage = rel.bs_marriage;
-            this.can_call_crusade = rel.can_call_crusade;
-            this.can_excommunicate = rel.can_excommunicate;
-            this.can_grant_claim = rel.can_grant_claim;
-            this.can_grant_divorce = rel.can_grant_divorce;
-            this.can_have_antipopes = rel.can_have_antipopes;
-            this.can_hold_temples = rel.can_hold_temples;
-            this.can_retire_to_monastery = rel.can_retire_to_monastery;
-            this.divine_blood = rel.divine_blood;
-            this.female_temple_holders = rel.female_temple_holders;
+            _allow_looting = rel._allow_looting;
+            _allow_rivermovement = rel._allow_rivermovement;
+            _allow_viking_invasion = rel._allow_viking_invasion;
+            _autocephaly = rel._autocephaly;
+            _bs_marriage = rel._bs_marriage;
+            _can_call_crusade = rel._can_call_crusade;
+            _can_excommunicate = rel._can_excommunicate;
+            _can_grant_claim = rel._can_grant_claim;
+            _can_grant_divorce = rel._can_grant_divorce;
+            _can_have_antipopes = rel._can_have_antipopes;
+            _can_hold_temples = rel._can_hold_temples;
+            _can_retire_to_monastery = rel._can_retire_to_monastery;
+            _divine_blood = rel._divine_blood;
+            _female_temple_holders = rel._female_temple_holders;
             this.hasLeader = rel.hasLeader;
-            this.has_heir_designation = rel.has_heir_designation;
-            this.investiture = rel.investiture;
-            this.matrilineal_marriages = rel.matrilineal_marriages;
-            this.pacifist = rel.pacifist;
-            this.pc_marriage = rel.pc_marriage;
-            this.peace_prestige_loss = rel.peace_prestige_loss;
-            this.polytheism = rel.polytheism;
-            this.priests_can_inherit = rel.priests_can_inherit;
-            this.psc_marriage = rel.psc_marriage;
+            _has_heir_designation = rel._has_heir_designation;
+            _investiture = rel._investiture;
+            _matrilineal_marriages = rel._matrilineal_marriages;
+            _pacifist = rel._pacifist;
+            _pc_marriage = rel._pc_marriage;
+            _peace_prestige_loss = rel._peace_prestige_loss;
+            _polytheism = rel._polytheism;
+            _priests_can_inherit = rel._priests_can_inherit;
+            _psc_marriage = rel._psc_marriage;
 
             high_god_name = rel.high_god_name;
-            devil = rel.devil;
-            priest = rel.priest;
+            _devil = rel._devil;
+            _priest = rel._priest;
 
-            gods.AddRange(rel.gods);
+            _gods.AddRange(rel._gods);
 
 
             int r = Rand.Next(255);
@@ -675,11 +681,10 @@ namespace CrusaderKingsStoryGen
             if (b < 0)
                 b = 0;
 
-            for(int n=0;n<nChanges;n++)
+            for (int n = 0; n < nChanges; n++)
                 MakeChange();
 
-            DoReligionScope(high_god_name, devil, priest, scripture_name, crusade_name, culture.dna, r, g, b);
-
+            DoReligionScope(high_god_name, _devil, _priest, _scripture_name, _crusade_name, culture.dna, r, g, b);
         }
     }
 }

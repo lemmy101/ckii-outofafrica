@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -14,7 +30,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace CrusaderKingsStoryGen.Simulation
 {
-    class CharacterParser : Parser
+    internal class CharacterParser : Parser
     {
         public string religion = "pagan";
         public string culture = "norse";
@@ -37,7 +53,6 @@ namespace CrusaderKingsStoryGen.Simulation
                 d.Members.Add(this);
 
             this.Dynasty = d;
-
         }
 
         public void SetupExistingDynasty()
@@ -55,16 +70,15 @@ namespace CrusaderKingsStoryGen.Simulation
                 d.Members.Add(this);
 
             this.Dynasty = d;
-
         }
 
         public Dynasty Dynasty { get; set; }
 
-        private static int ccc = 0;
+        private static int s_ccc = 0;
         public void UpdateCultural()
         {
-            ccc++;
-            if (ccc > 10)
+            s_ccc++;
+            if (s_ccc > 10)
             {
                 var sub = Titles[0].SubTitles;
             }
@@ -77,7 +91,6 @@ namespace CrusaderKingsStoryGen.Simulation
             this.culture = top.culture;
             if (religion != "pagan")
             {
-
             }
             SetProperty("religion", religion);
 
@@ -109,7 +122,7 @@ namespace CrusaderKingsStoryGen.Simulation
             else
                 SetupExistingDynasty();
 
-            ccc--;
+            s_ccc--;
         }
 
         public bool isFemale { get; set; }
@@ -180,7 +193,7 @@ namespace CrusaderKingsStoryGen.Simulation
             int b = 769 - (16 + Rand.Next(50));
             YearOfBirth = 768 - (Rand.Next(80));
             YearOfDeath = 770 + Rand.Next(30);
-         //   CharacterManager.instance.SetAllDates(YearOfBirth, YearOfDeath, Scope);
+            //   CharacterManager.instance.SetAllDates(YearOfBirth, YearOfDeath, Scope);
         }
         public CharacterParser(bool adult = false)
             : base(CharacterManager.instance.GetNewCreatedCharacter())
@@ -199,7 +212,7 @@ namespace CrusaderKingsStoryGen.Simulation
             {
                 YearOfBirth -= 16 - Age;
             }
-        //    CharacterManager.instance.SetAllDates(YearOfBirth, YearOfDeath, Scope);
+            //    CharacterManager.instance.SetAllDates(YearOfBirth, YearOfDeath, Scope);
         }
 
         public void Tick()
@@ -264,7 +277,6 @@ namespace CrusaderKingsStoryGen.Simulation
                 {
                     if (provinceParser.land)
                         test.Add(provinceParser);
-
                 }
 
                 titleParser.AddChildProvinces(test);
@@ -282,9 +294,9 @@ namespace CrusaderKingsStoryGen.Simulation
                     {
                         parser.RenameForCulture(Culture);
                         parser.CreateTitle();
-                  //      if (Culture.dna.horde)
-                    //        parser.Title.Scope.Do("historical_nomad = yes");
-         
+                        //      if (Culture.dna.horde)
+                        //        parser.Title.Scope.Do("historical_nomad = yes");
+
                         parser.CreateProvinceDetails(Culture);
                     }
 
@@ -304,7 +316,6 @@ namespace CrusaderKingsStoryGen.Simulation
                             {
                                 continue;
                             }
-
                         }
                     }
 
@@ -336,9 +347,7 @@ namespace CrusaderKingsStoryGen.Simulation
 
                 GiveTitle(tit);
                 targets.Remove(t);
-
             }
-
         }
 
         public CharacterParser TopLiegeCharacter
@@ -394,7 +403,7 @@ namespace CrusaderKingsStoryGen.Simulation
                 if (t.Holder.PrimaryTitle == t)
                     t.Holder.PrimaryTitle = null;
 
-                t.Holder.Titles.Remove(t);                
+                t.Holder.Titles.Remove(t);
             }
 
             t.Active = true;
@@ -421,10 +430,8 @@ namespace CrusaderKingsStoryGen.Simulation
                 if (this.GetProperty("religion") != null)
                     t.Owns[0].SetProperty("religion", this.GetProperty("religion").Value);
                 t.Owns[0].ProvinceOwner = t;
-
             }
             SetColorOfChildren(t);
-
         }
 
         private void SetColorOfChildren(TitleParser t)
@@ -464,7 +471,6 @@ namespace CrusaderKingsStoryGen.Simulation
                 if (!(provinceParser.Title.Liege == null && (chr == provinceParser.Title.Holder || chr == null)))
                 {
                     list2.Add(provinceParser);
-
                 }
             }
             if (list2.Count == 0)
@@ -481,7 +487,6 @@ namespace CrusaderKingsStoryGen.Simulation
             {
                 last = provinces.Count;
                 MapManager.instance.FindAdjacent(provinces, i - provinces.Count, chr);
-
             }
             while (last != provinces.Count && provinces.Count < i);
 
@@ -502,7 +507,6 @@ namespace CrusaderKingsStoryGen.Simulation
                 //      if ((provinceParser.Title.SameRealm(chr.PrimaryTitle)))
                 {
                     list2.Add(provinceParser);
-
                 }
             }
             if (list2.Count == 0)
@@ -519,13 +523,12 @@ namespace CrusaderKingsStoryGen.Simulation
             {
                 last = provinces.Count;
                 MapManager.instance.FindAdjacentSameRealm(provinces, i - provinces.Count, chr);
-
             }
             while (last != provinces.Count && provinces.Count < i);
 
             return provinces;
         }
-        static Stack<List<ProvinceParser>> resultsStack = new Stack<List<ProvinceParser>>();
+        private static Stack<List<ProvinceParser>> s_resultsStack = new Stack<List<ProvinceParser>>();
         public void ConvertCountTitlesToDuchies()
         {
             if (Titles.Count == 0)
@@ -545,14 +548,12 @@ namespace CrusaderKingsStoryGen.Simulation
                     timeout = 10;
                 if (timeout == 1)
                 {
-
                 }
                 last = nc;
                 int duchySize = 3 + rand.Next(2);
                 var results = this.GetProvinceGroupSameRealm(duchySize, this);
                 if (results.Count < 2)
                 {
-                    
                 }
                 for (int index = 0; index < results.Count; index++)
                 {
@@ -625,12 +626,11 @@ namespace CrusaderKingsStoryGen.Simulation
                         {
                             if (!provinceParser.land)
                                 continue;
-                            
+
                             if (provinceParser.title == null)
                             {
                                 blankPlacesToSpreadTo.Add(provinceParser);
                                 continue;
-
                             }
 
                             if (provinceParser.Title.Liege != null)
@@ -644,88 +644,76 @@ namespace CrusaderKingsStoryGen.Simulation
                             else
                             {
                                 blankPlacesToSteal.Add(provinceParser);
-                           
                             }
-                           
                         }
 
-                            if (smallestDuchy != null)
-                            {
-                                var title2 = smallestDuchy;
+                        if (smallestDuchy != null)
+                        {
+                            var title2 = smallestDuchy;
 
-                                // SimulationManager.instance.characters.Remove(ruler);
-                                title2.AddSub(homelessCounty.Title);
-                                SimulationManager.instance.AddCharacterForTitle(homelessCounty.Title);
+                            // SimulationManager.instance.characters.Remove(ruler);
+                            title2.AddSub(homelessCounty.Title);
+                            SimulationManager.instance.AddCharacterForTitle(homelessCounty.Title);
+                            homeless.Remove(homelessCounty);
+                            index--;
+                            break;
+                        }
+                        else
+                        {
+                            if (blankPlacesToSpreadTo.Count > 0)
+                            {
+                                var province = blankPlacesToSpreadTo[0];
+
+                                var chr = SimulationManager.instance.AddCharacter(culture, religion);
+                                var title = TitleManager.instance.CreateDukeScriptScope(province, chr);
+                                chr.GiveTitle(title);
+                                var ctitle = province.CreateTitle();
+                                province.title = ctitle.Name;
+                                title.AddSub(ctitle);
+                                title.AddSub(homelessCounty.Title);
+                                chr.GiveTitleAsHolder(province.Title);
+                                chr.GiveTitleAsHolder(homelessCounty.Title);
                                 homeless.Remove(homelessCounty);
                                 index--;
-                                break;
+                            }
+                            else if (blankPlacesToSteal.Count > 0)
+                            {
+                                var province = blankPlacesToSteal[0];
+
+                                var chr = SimulationManager.instance.AddCharacter(culture, religion);
+                                var title = TitleManager.instance.CreateDukeScriptScope(province, chr);
+                                chr.GiveTitle(title);
+                                if (province.Title.Holder != null)
+                                    province.Title.Holder.RemoveTitle(province.Title);
+                                homelessCounty.Title.Holder.RemoveTitle(homelessCounty.Title);
+                                title.AddSub(province.Title);
+                                title.AddSub(homelessCounty.Title);
+                                chr.GiveTitleAsHolder(province.Title);
+                                chr.GiveTitleAsHolder(homelessCounty.Title);
+                                homeless.Remove(homelessCounty);
+                                index--;
                             }
                             else
                             {
-                                if (blankPlacesToSpreadTo.Count > 0)
-                                {
-                                    var province = blankPlacesToSpreadTo[0];
-
-                                    var chr = SimulationManager.instance.AddCharacter(culture, religion);
-                                    var title = TitleManager.instance.CreateDukeScriptScope(province, chr);
-                                    chr.GiveTitle(title);
-                                    var ctitle = province.CreateTitle();
-                                    province.title = ctitle.Name;
-                                    title.AddSub(ctitle);
-                                    title.AddSub(homelessCounty.Title);
-                                    chr.GiveTitleAsHolder(province.Title);
-                                    chr.GiveTitleAsHolder(homelessCounty.Title);
-                                    homeless.Remove(homelessCounty);
-                                    index--;
-
-                                } else if (blankPlacesToSteal.Count > 0)
-                                {
-                                    var province = blankPlacesToSteal[0];
-
-                                    var chr = SimulationManager.instance.AddCharacter(culture, religion);
-                                    var title = TitleManager.instance.CreateDukeScriptScope(province, chr);
-                                    chr.GiveTitle(title);
-                                    if(province.Title.Holder != null)
-                                        province.Title.Holder.RemoveTitle(province.Title);
-                                    homelessCounty.Title.Holder.RemoveTitle(homelessCounty.Title);
-                                    title.AddSub(province.Title);
-                                    title.AddSub(homelessCounty.Title);
-                                    chr.GiveTitleAsHolder(province.Title);
-                                    chr.GiveTitleAsHolder(homelessCounty.Title);
-                                    homeless.Remove(homelessCounty);
-                                    index--;
-                                }
-                                else
-                                {
-                                    
-                                }
-                           }
-
-
-                        
+                            }
+                        }
                     }
-
                 }
-
             }
 
             if (homeless.Count > 0)
             {
-                
             }
             for (int index = 0; index < Titles.Count; index++)
             {
-
                 var titleParser = Titles[index];
                 if (titleParser.Liege == null)
                     titleParser.Liege = PrimaryTitle;
                 if (titleParser.Rank == 1)
                 {
-
                     //  if (titleParser.Liege.Rank==2)
                     //       GiveTitle(titleParser.Liege);
                 }
-
             }
             /*
             // now if we're an empire, create some kings! Eep...
@@ -851,7 +839,6 @@ namespace CrusaderKingsStoryGen.Simulation
             GiveTitle(t.Title);
             GiveTitle(t.Title.Liege);
             {
-
             }
             while (this.NumberofDukeTitles > 0)
             {
@@ -869,7 +856,6 @@ namespace CrusaderKingsStoryGen.Simulation
                     SimulationManager.instance.characters.Remove(ruler);
                     title.AddSub(provinceParser.Title);
                 }
-
             }
             if (Titles.Count == 0)
                 return;
@@ -1083,7 +1069,6 @@ namespace CrusaderKingsStoryGen.Simulation
                             c++;
                         }
                     }
-
                 }
 
                 return c;
@@ -1132,7 +1117,6 @@ namespace CrusaderKingsStoryGen.Simulation
         {
             //     foreach (var child in scope.Children)
             {
-
                 if (scope.Children.Count > 0)
                 {
                     ScriptScope c = scope;
@@ -1223,7 +1207,6 @@ namespace CrusaderKingsStoryGen.Simulation
                         {
                             break;
                         }
-
                     }
                 }
                 index++;
@@ -1276,8 +1259,6 @@ namespace CrusaderKingsStoryGen.Simulation
 
         public void CreateFamily(int depth = 0, int maxdepth = 4, int minYearForHeirs = -1)
         {
-     
-
             if (depth > maxdepth)
                 return;
 
@@ -1296,7 +1277,6 @@ namespace CrusaderKingsStoryGen.Simulation
             Mother = GetSuitableMotherForChild(religion, culture, min, max, YearOfBirth);
             if (Mother.ID == 1002182)
             {
-
             }
             Father.Spouses.Add(Mother);
             Mother.Spouses.Add(Father);
@@ -1322,7 +1302,6 @@ namespace CrusaderKingsStoryGen.Simulation
                 int startAdulthood = dateWhenSixteen;
                 if (minYearForHeirs > startAdulthood)
                     startAdulthood = minYearForHeirs;
-
             }
 
             if (Father.YearOfDeath < YearOfBirth)
@@ -1355,7 +1334,7 @@ namespace CrusaderKingsStoryGen.Simulation
                 kid.Mother = this;
                 kid.Father = otherParent;
             }
-          
+
             kid.SetupExistingDynasty();
             Kids.Add(kid);
             otherParent.Kids.Add(kid);
@@ -1390,7 +1369,7 @@ namespace CrusaderKingsStoryGen.Simulation
             {
                 if (!provinceParser.Title.AnyHolder() || provinceParser.GetCurrentHolder().PrimaryTitle.Rank == 1)
                 {
-                    if(!options.Contains(provinceParser.Title) && !Titles.Contains(provinceParser.Title))
+                    if (!options.Contains(provinceParser.Title) && !Titles.Contains(provinceParser.Title))
                         options.Add(provinceParser.Title);
                 }
             }
@@ -1400,7 +1379,6 @@ namespace CrusaderKingsStoryGen.Simulation
                 var r = options[Rand.Next(options.Count)];
                 GiveTitleAsHolder(r);
                 return r;
-
             }
             return null;
         }
@@ -1409,7 +1387,7 @@ namespace CrusaderKingsStoryGen.Simulation
         {
             AddSiblings();
             CharacterManager.instance.SetAllDates(YearOfBirth, YearOfDeath, Scope);
-              
+
             int birthYear = YearOfBirth - 1;
             int deathYear = YearOfBirth + 1;
             if (this.Father != null)
@@ -1424,7 +1402,7 @@ namespace CrusaderKingsStoryGen.Simulation
                         CharacterManager.instance.SetAllDates(characterParser.YearOfBirth, characterParser.YearOfDeath, characterParser.Scope);
                 }
             }
-          
+
             // now we have a range that definitely covers all the kids.
             int parentMarriage = birthYear - 1;
             // now make the parents definitely 16 years old before marriage...
@@ -1434,15 +1412,15 @@ namespace CrusaderKingsStoryGen.Simulation
             {
                 Father.YearOfBirth = parentBirthYear - Rand.Next(10);
                 Father.YearOfDeath = parentDeathYear + Rand.Next(50);
-                
-                Father.DoFamilyDatesOfBirth(); 
+
+                Father.DoFamilyDatesOfBirth();
             }
 
             if (Mother != null)
             {
                 Mother.YearOfBirth = parentBirthYear - Rand.Next(5);
                 Mother.YearOfDeath = parentDeathYear + Rand.Next(50);
-                Mother.DoFamilyDatesOfBirth(); 
+                Mother.DoFamilyDatesOfBirth();
             }
 
             if (Father != null && Mother != null)
@@ -1463,7 +1441,7 @@ namespace CrusaderKingsStoryGen.Simulation
 
             for (int n = 0; n < num; n++)
             {
-                yearOfBirth += Rand.Next(3)+1;
+                yearOfBirth += Rand.Next(3) + 1;
 
                 var kid = Father.CreateKidWith(Mother, yearOfBirth);
 

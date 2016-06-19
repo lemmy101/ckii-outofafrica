@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Drawing;
@@ -10,7 +26,7 @@ using System.Windows.Forms;
 
 namespace CrusaderKingsStoryGen
 {
-    class ScriptReference
+    internal class ScriptReference
     {
         public String Referenced { get; set; }
 
@@ -24,7 +40,7 @@ namespace CrusaderKingsStoryGen
             return Referenced;
         }
     }
-    class ScriptCommand
+    internal class ScriptCommand
     {
         public ScriptScope Parent;
         public string Name { get; set; }
@@ -33,7 +49,6 @@ namespace CrusaderKingsStoryGen
 
         public ScriptCommand()
         {
-         
         }
         public ScriptCommand(string name, object val, ScriptScope parent)
         {
@@ -55,7 +70,7 @@ namespace CrusaderKingsStoryGen
             return s;
         }
     }
-    class ScriptScope
+    internal class ScriptScope
     {
         public ScriptScope Parent { get; set; }
         public List<object> Children = new List<object>();
@@ -64,7 +79,6 @@ namespace CrusaderKingsStoryGen
 
         public string Data
         {
-
             get { return _data; }
             set { _data = "\t\t\t" + value.Trim(); }
         }
@@ -82,21 +96,21 @@ namespace CrusaderKingsStoryGen
                 int gfdgf = 0;
             }
             String tab = "";
-             for (int n = 1; n < depth; n++)
+            for (int n = 1; n < depth; n++)
             {
                 tab += "\t";
             }
-             string ret = "\n";
-         
-            if (depth > 0)
-                file.Write(tab + Name + " = {"+ret);
+            string ret = "\n";
 
-            string rett = "\t" ;
-             tab = "";
-             for (int n = 1; n < depth; n++)
-             {
-                 tab += rett;
-             }
+            if (depth > 0)
+                file.Write(tab + Name + " = {" + ret);
+
+            string rett = "\t";
+            tab = "";
+            for (int n = 1; n < depth; n++)
+            {
+                tab += rett;
+            }
             foreach (var child in Children)
             {
                 if (child is ScriptCommand)
@@ -117,17 +131,15 @@ namespace CrusaderKingsStoryGen
                     (child as ScriptScope).Save(file, depth + 1);
                 }
             }
-            if (Data.Trim().Length>0)
+            if (Data.Trim().Length > 0)
                 file.Write(Data);
             if (depth > 0)
             {
-                if(depth == 1)
+                if (depth == 1)
                     file.Write(tab + "}\n\n");
                 else
                     file.Write(tab + "}\n");
-
             }
-
         }
 
         private string GetExportStringFromObject(object value)
@@ -145,28 +157,25 @@ namespace CrusaderKingsStoryGen
                 {
                     Color col = (Color)value;
                     return "{ " + col.R + " " + col.G + " " + col.B + " }";
-
                 }
                 catch (Exception)
                 {
-                    
-                   
                 }
             }
             if (value is ScriptReference)
             {
-                return ((ScriptReference) value).Referenced;
+                return ((ScriptReference)value).Referenced;
             }
             if (value is int || value is float)
             {
                 return value.ToString();
             }
-            if(value.ToString().Contains(" "))
+            if (value.ToString().Contains(" "))
                 return "\"" + value.ToString() + "\"";
             else
                 return value.ToString();
         }
-        
+
         public bool AllowDuplicates { get; set; }
         public Dictionary<String, object> UnsavedData = new Dictionary<string, object>();
 
@@ -181,7 +190,6 @@ namespace CrusaderKingsStoryGen
                 Add(scope);
                 scope.Parent = this;
             }
-            
         }
 
         public bool HasNamed(string s)
@@ -194,7 +202,6 @@ namespace CrusaderKingsStoryGen
                 if (child is ScriptCommand)
                     if (((ScriptCommand)child).Name == s)
                         return true;
-
             }
 
             return false;
@@ -206,18 +213,17 @@ namespace CrusaderKingsStoryGen
             foreach (var child in a)
             {
                 if (child is ScriptScope)
-                    if (((ScriptScope) child).Name == s)
+                    if (((ScriptScope)child).Name == s)
                         Remove(child);
                 if (child is ScriptCommand)
                     if (((ScriptCommand)child).Name == s)
                         Remove(child);
-
             }
         }
 
         public void Add(string property, object value)
         {
-            Add(new ScriptCommand() {Name = property, Value = value});
+            Add(new ScriptCommand() { Name = property, Value = value });
         }
 
         public ScriptScope AddScope(string name)
@@ -243,7 +249,7 @@ namespace CrusaderKingsStoryGen
         public ScriptScope(String name)
         {
             AllowDuplicates = true;
-            this.Name = name;   
+            this.Name = name;
         }
 
         public void Remove(object scriptScope)
@@ -253,7 +259,7 @@ namespace CrusaderKingsStoryGen
             {
                 ChildrenMap.Remove(((ScriptScope)scriptScope).Name);
                 Scopes.Remove(((ScriptScope)scriptScope));
-                ((ScriptScope) scriptScope).Parent = null;
+                ((ScriptScope)scriptScope).Parent = null;
             }
             if (scriptScope is ScriptCommand)
             {
@@ -290,7 +296,7 @@ namespace CrusaderKingsStoryGen
         {
             if (!AllowDuplicates && ChildrenMap.ContainsKey(scriptScope.Name))
                 return;
-            
+
             Children.Add(scriptScope);
             ChildrenMap[scriptScope.Name] = scriptScope;
             scriptScope.Parent = this;
@@ -314,7 +320,6 @@ namespace CrusaderKingsStoryGen
         public void Do(string line)
         {
             ScriptLoader.instance.LoadString(line, this);
-         
         }
 
         public void Strip(string[] strings)
@@ -343,7 +348,6 @@ namespace CrusaderKingsStoryGen
                     }
                 }
             }
-
         }
 
 
@@ -387,13 +391,13 @@ namespace CrusaderKingsStoryGen
 
                 if (o2 is ScriptScope)
                 {
-                    var dest = ((ScriptScope) o2);
+                    var dest = ((ScriptScope)o2);
 
                     dest.Clear();
 
                     if (o is ScriptScope)
                     {
-                        var src = ((ScriptScope) o);
+                        var src = ((ScriptScope)o);
 
                         foreach (var child in src.Children)
                         {
@@ -409,14 +413,13 @@ namespace CrusaderKingsStoryGen
         {
             if (child is ScriptScope)
             {
-                var newScope = ((ScriptScope) child).Copy();
+                var newScope = ((ScriptScope)child).Copy();
                 Add(newScope);
             }
             else
             {
                 var newparam = ((ScriptCommand)child).Copy();
                 Add(newparam);
-             
             }
         }
 
@@ -432,8 +435,8 @@ namespace CrusaderKingsStoryGen
                 }
                 if (child is ScriptCommand)
                 {
-                    var c = ((ScriptCommand) child).Copy();
-                    
+                    var c = ((ScriptCommand)child).Copy();
+
                     newS.Add(c);
                 }
             }
@@ -455,8 +458,8 @@ namespace CrusaderKingsStoryGen
             int index = 0;
             if (split[0].Contains("["))
             {
-                index = Convert.ToInt32(split[0].Split(new[] {'[', ']'})[1]);
-                split[0] = split[0].Split(new[] {'[', ']'})[0];
+                index = Convert.ToInt32(split[0].Split(new[] { '[', ']' })[1]);
+                split[0] = split[0].Split(new[] { '[', ']' })[0];
             }
             if (ChildrenMap.ContainsKey(split[0]))
             {
@@ -477,8 +480,8 @@ namespace CrusaderKingsStoryGen
                                     return child;
 
                                 s = s.Substring(0, s.Length - 1);
-                                
-                                return ((ScriptScope) child).PathTo(s);
+
+                                return ((ScriptScope)child).PathTo(s);
                             }
                             else
                             {
@@ -488,9 +491,8 @@ namespace CrusaderKingsStoryGen
 
                                 s = s.Substring(0, s.Length - 1);
 
-                                return ((ScriptCommand) child);
+                                return ((ScriptCommand)child);
                             }
-                            
                         }
                         found++;
                     }
@@ -510,7 +512,7 @@ namespace CrusaderKingsStoryGen
             return "";
         }
     }
-    class Script
+    internal class Script
     {
         public string Name { get; set; }
         public ScriptScope Root { get; set; }
@@ -547,13 +549,12 @@ namespace CrusaderKingsStoryGen
             filename = filename.Replace(Globals.MapDir, "");
             filename = filename.Replace(Globals.ModDir, "");
             filename = filename.Replace(Globals.OModDir, "");
-            
+
             filename = Globals.ModDir + filename;
 
             using (System.IO.StreamWriter file =
                 new System.IO.StreamWriter(filename, false, Encoding.GetEncoding(1252)))
             {
-
                 this.Root.Save(file, 0);
 
                 file.Close();
@@ -561,24 +562,24 @@ namespace CrusaderKingsStoryGen
         }
     }
 
-    class ScriptLoader
+    internal class ScriptLoader
     {
         public static ScriptLoader instance = new ScriptLoader();
 
-        private int lineNum = 0;
-        Stack<ScriptScope> scopeStack = new Stack<ScriptScope>();
+        private int _lineNum = 0;
+        private Stack<ScriptScope> _scopeStack = new Stack<ScriptScope>();
 
 
 
         public ScriptScope LoadString(string line, ScriptScope target)
         {
-            Script script =new Script();
+            Script script = new Script();
             script.Root = target;
             if (line.Contains("\n"))
             {
-            //    ScriptLoader.instance.LoadString(line);
+                //    ScriptLoader.instance.LoadString(line);
                 var lines = line.Split('\n');
-                current = target;
+                _current = target;
                 foreach (var s in lines)
                 {
                     DoLine(script, s);
@@ -586,7 +587,7 @@ namespace CrusaderKingsStoryGen
             }
             else
             {
-                current = script.Root;
+                _current = script.Root;
                 DoLine(script, line);
             }
 
@@ -599,20 +600,17 @@ namespace CrusaderKingsStoryGen
             {
                 var f = File.CreateText(filename);
                 f.Close();
-
             }
-             System.IO.StreamReader file =
-                new System.IO.StreamReader(filename, Encoding.GetEncoding(1252));
+            System.IO.StreamReader file =
+               new System.IO.StreamReader(filename, Encoding.GetEncoding(1252));
             string line = "";
             Script script = new Script();
             script.Name = filename;
             script.Root = new ScriptScope();
-            current = script.Root;
-          while ((line = file.ReadLine()) != null)
+            _current = script.Root;
+            while ((line = file.ReadLine()) != null)
             {
-          
                 DoLine(script, line);
-
             }
 
             file.Close();
@@ -620,13 +618,13 @@ namespace CrusaderKingsStoryGen
             return script;
         }
 
-        private ScriptScope current = null;
+        private ScriptScope _current = null;
         private void DoLine(Script script, string line)
         {
-           bool skipping = false;
+            bool skipping = false;
 
             String origline = line;
-            lineNum++;
+            _lineNum++;
             if (line.Trim().Length == 0)
                 return;
             if (line.Trim().StartsWith("#"))
@@ -647,7 +645,7 @@ namespace CrusaderKingsStoryGen
             if (line.Contains("="))
             {
                 string[] sp = line.Split('=');
-             
+
                 string name = sp[0].Trim();
                 if (line.Trim().StartsWith("data"))
                 {
@@ -656,63 +654,56 @@ namespace CrusaderKingsStoryGen
                 if (!(line.Contains("{") || sp[1].Trim().Length == 0))
                 {
                     string value = sp[1].Trim();
-                    while(value.EndsWith("}"))
-                        value = value.Substring(0, value.Length-1).Trim();
+                    while (value.EndsWith("}"))
+                        value = value.Substring(0, value.Length - 1).Trim();
 
                     if (sp.Length > 2)
                     {
-                        
                     }
                     if (value.Contains("["))
                     {
-                     
                         if (sp.Count() > 2)
                         {
-
-                        } 
+                        }
                         value = sp[1].Replace("[", "");
                         object val = GetValueFromString(value);
-                        current.Add(new ScriptCommand() { Name = name, Value = val, AlwaysQuote=true });
-        
+                        _current.Add(new ScriptCommand() { Name = name, Value = val, AlwaysQuote = true });
                     }
                     else
                     {
                         object val = GetValueFromString(value);
-                        current.Add(new ScriptCommand() { Name = name, Value = val });
-     
+                        _current.Add(new ScriptCommand() { Name = name, Value = val });
                     }
-
                 }
                 else if (!line.StartsWith("}"))
                 {
-                  
                     if (line.Contains("{") && line.Contains("}"))
                     {
                         string sname = line.Split('=')[0].Trim();
                         if (sname == "color" || sname == "color2")
                         {
                             object val = GetValueFromString(line.Split('{', '}')[1].Trim());
-                           
-                            current.Add(new ScriptCommand() { Name = name, Value = val });
+
+                            _current.Add(new ScriptCommand() { Name = name, Value = val });
                             return;
                         }
-                        
+
                         var s = new ScriptScope() { Name = name };
-                        s.Parent = current;
-                        scopeStack.Push(current);
-                        current.Add(s);
-                        current = s;
+                        s.Parent = _current;
+                        _scopeStack.Push(_current);
+                        _current.Add(s);
+                        _current = s;
 
                         int st = line.IndexOf('{');
                         int en = line.LastIndexOf('}');
                         String strip = line.Substring(st + 1, en - (st + 1));
                         bool bDone = false;
-                   
+
                         if (strip.Contains("{") && strip.Contains("="))
                         {
                             int brace = strip.IndexOf("{");
                             int eq = strip.IndexOf("=");
-                            String between = strip.Substring(eq+1, brace - eq - 1);
+                            String between = strip.Substring(eq + 1, brace - eq - 1);
                             if (between.Trim().Length > 0)
                             {
                                 String[] sp2 = strip.Split(new[] { ' ', '\t' });
@@ -722,15 +713,14 @@ namespace CrusaderKingsStoryGen
                                 {
                                     if (s1.Trim().Length == 0)
                                         continue;
-                                    
+
                                     bool hasSomethingElse = false;
-                                    if(s1.Contains("}"))
+                                    if (s1.Contains("}"))
                                     {
                                         String s2 = s1.Trim();
                                         String str = "";
                                         for (int index = 0; index < s2.Length; index++)
                                         {
-                                            
                                             var c = s2[index];
                                             if (c == '}')
                                             {
@@ -739,7 +729,7 @@ namespace CrusaderKingsStoryGen
                                                     lines.Add(str.Trim());
                                                 }
                                                 lines.Add("}");
-                                                
+
                                                 str = "";
                                             }
                                             else
@@ -752,7 +742,7 @@ namespace CrusaderKingsStoryGen
                                 }
 
                                 List<String> comp = new List<string>();
-                                for (int index = 0; index < lines.Count-1; index++)
+                                for (int index = 0; index < lines.Count - 1; index++)
                                 {
                                     var line1 = lines[index];
                                     if (lines[index + 1] == "{")
@@ -764,7 +754,6 @@ namespace CrusaderKingsStoryGen
                                         }
                                         if (tot.Contains("6032"))
                                         {
-
                                         }
                                         DoLine(script, tot.Substring(0, tot.Length));
                                     }
@@ -776,10 +765,8 @@ namespace CrusaderKingsStoryGen
 
                                 foreach (var l in comp)
                                 {
-                                
                                     DoLine(script, l.Trim());
                                 }
-
                             }
                             else
                             {
@@ -791,7 +778,7 @@ namespace CrusaderKingsStoryGen
                             {
                                 String[] sp2 = strip.Split(new[] { ' ', '\t' });
                                 List<string> lines = new List<string>();
-                                
+
                                 foreach (var s1 in sp2)
                                 {
                                     if (s1.Trim().Length == 0)
@@ -809,7 +796,6 @@ namespace CrusaderKingsStoryGen
                                     {
                                         comp.Add(lines[index - 1] + " " + lines[index] + " " + lines[index + 1]);
                                     }
-                                
                                 }
 
                                 foreach (var l in comp)
@@ -818,50 +804,46 @@ namespace CrusaderKingsStoryGen
                                 }
                             }
 
-                           // DoLine(script, strip.Trim());
-        
+                            // DoLine(script, strip.Trim());
                         }
 
-                  
-                        current = scopeStack.Pop();
+
+                        _current = _scopeStack.Pop();
 
                         return;
-
                     }
                     string sname2 = line.Split('=')[0].Trim();
                     ScriptScope scope = new ScriptScope();
-                    scope.Parent = current;
+                    scope.Parent = _current;
                     scope.Name = sname2;
 
-                    scopeStack.Push(current);
-                    current.Add(scope);
+                    _scopeStack.Push(_current);
+                    _current.Add(scope);
 
-              
-                    current = scope;
-                    current.Name = name;
 
+                    _current = scope;
+                    _current.Name = name;
                 }
             }
             else if (line.Trim().StartsWith("}"))
             {
-                current = scopeStack.Pop();
+                _current = _scopeStack.Pop();
                 line = line.Trim().Substring(1);
                 DoLine(script, line);
             }
             else
             {
-                current.Data += origline + "\n";
+                _current.Data += origline + "\n";
             }
-           
         }
 
         public static object GetValueFromString(string value)
         {
-            if(value.ToString().Trim() == "\"\"")
+            if (value.ToString().Trim() == "\"\"")
                 return "\"\"";
             if (value.ToString().Trim().Length == 0)
                 return "\"\"";
-            
+
             value = value.Trim();
             if (value == "yes" || value == "no")
                 return value == "yes";
@@ -873,13 +855,12 @@ namespace CrusaderKingsStoryGen
             }
             if (value.Split(' ').Count() >= 3)
             {
-
                 bool isFloat = value.Contains(".");
                 var sp = value.Split(' ');
                 try
                 {
-                    if(isFloat)
-                        return Color.FromArgb(255, (int) (255.0f * Convert.ToSingle(sp[0])), (int) (255.0f * Convert.ToSingle(sp[1])), (int) (255.0f * Convert.ToSingle(sp[2])));
+                    if (isFloat)
+                        return Color.FromArgb(255, (int)(255.0f * Convert.ToSingle(sp[0])), (int)(255.0f * Convert.ToSingle(sp[1])), (int)(255.0f * Convert.ToSingle(sp[2])));
                     else
                         return Color.FromArgb(255, Convert.ToInt32(sp[0]), Convert.ToInt32(sp[1]), Convert.ToInt32(sp[2]));
                 }
@@ -905,16 +886,12 @@ namespace CrusaderKingsStoryGen
                     }
                     catch (Exception)
                     {
-                        
-                        
                     }
-
                 }
             }
-            if(value.Contains("\""))
+            if (value.Contains("\""))
                 return value.Replace("\"", "");
             return new ScriptReference(value);
         }
-
     }
 }

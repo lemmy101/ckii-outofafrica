@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -7,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace CrusaderKingsStoryGen
 {
-    class CultureGroupParser : Parser
+    internal class CultureGroupParser : Parser
     {
         public List<CultureParser> Cultures = new List<CultureParser>();
         internal string chosenGfx;
@@ -20,7 +36,7 @@ namespace CrusaderKingsStoryGen
         {
             if (scope.UnsavedData.ContainsKey("color"))
             {
-                var col = ( Color)Scope.UnsavedData["color"];
+                var col = (Color)Scope.UnsavedData["color"];
 
                 r = col.R;
                 g = col.G;
@@ -28,7 +44,6 @@ namespace CrusaderKingsStoryGen
             }
             foreach (var scriptScope in scope.Scopes)
             {
-                
                 if (CultureManager.instance.CultureMap.ContainsKey(scriptScope.Name))
                     Cultures.Add(CultureManager.instance.CultureMap[scriptScope.Name]);
             }
@@ -57,9 +72,8 @@ namespace CrusaderKingsStoryGen
             {
                 String oname = name;
                 name = StarNames.SafeName(name);
-              
-                LanguageManager.instance.Add(name, oname);
 
+                LanguageManager.instance.Add(name, oname);
             }
 
 
@@ -74,10 +88,9 @@ namespace CrusaderKingsStoryGen
             CultureManager.instance.CultureMap[name] = r;
             r.Name = Name;
             r.Init();
-           
+
             Scope.SetChild(r.Scope);
             return r;
-            
         }
 
         public override ScriptScope CreateScope()
@@ -103,9 +116,9 @@ namespace CrusaderKingsStoryGen
             Scope.UnsavedData["color"] = Color.FromArgb(255, r, g, b);
         }
     }
-    class CultureParser : Parser
+    internal class CultureParser : Parser
     {
-           public CultureGroupParser Group
+        public CultureGroupParser Group
         {
             get
             {
@@ -126,11 +139,10 @@ namespace CrusaderKingsStoryGen
             return null;
         }
 
-      
+
         public void Init()
         {
-            
-    //        Scope.Clear();
+            //        Scope.Clear();
 
             String fx = Group.chosenGfx;
             if (Group.chosenGfx == null)
@@ -179,11 +191,10 @@ namespace CrusaderKingsStoryGen
             if (b < 0)
                 b = 0;
 
-           Scope.Do(@"
+            Scope.Do(@"
                 
 		         color = { " + r + " " + g + " " + b + @" }
         ");
-
         }
 
         public void DoDetailsForCulture()
@@ -192,14 +203,13 @@ namespace CrusaderKingsStoryGen
             dna.culture = this;
             if (dna.portraitPool.Count == 0)
             {
-                int c = Rand.Next(2)+1;
+                int c = Rand.Next(2) + 1;
                 String cul = GetRandomCultureGraphics();
                 for (int i = 0; i < c; i++)
                 {
                     dna.portraitPool.Add(cul);
                     cul = GetRelatedCultureGfx(cul);
                 }
-
             }
 
             String portrait = "";
@@ -260,7 +270,7 @@ namespace CrusaderKingsStoryGen
                 }
 		
 		        male_names = {
-			        " + dna.GetMaleNameBlock() +  @"
+			        " + dna.GetMaleNameBlock() + @"
 		        }
 		        female_names = {
 			        " + dna.GetFemaleNameBlock() + @"
@@ -293,27 +303,26 @@ namespace CrusaderKingsStoryGen
 		        allow_looting =  " + (dna.allow_looting ? "yes" : "no") + @"
 		        seafarer =  " + (dna.seafarer ? "yes" : "no") + @"
         ");
-
         }
 
         public string GetRelatedCultureGfx(string cul)
         {
-            if (wh.Contains(cul))
+            if (s_wh.Contains(cul))
             {
-                return wh[Rand.Next(wh.Count)];
+                return s_wh[Rand.Next(s_wh.Count)];
             }
-            else if(!wh.Contains(cul))
+            else if (!s_wh.Contains(cul))
             {
-                return bl[Rand.Next(bl.Count)];
+                return s_bl[Rand.Next(s_bl.Count)];
             }
 
             return null;
         }
 
         public List<String> male_names = new List<string>();
-        public List<String> female_names = new List<string>(); 
+        public List<String> female_names = new List<string>();
 
-        private static String[] gfx =
+        private static String[] s_gfx =
         {
             "norsegfx", "germangfx", "frankishgfx", "westerngfx", "saxongfx", "italiangfx", "southerngfx", "occitangfx",
             "easterngfx", "byzantinegfx", "easternslavicgfx", "westernslavicgfx",
@@ -321,20 +330,20 @@ namespace CrusaderKingsStoryGen
             "andalusiangfx", "africangfx", "mesoamericangfx", "indiangfx"
         };
 
-        private static List<String> wh = new List<string>()
+        private static List<String> s_wh = new List<string>()
         {
             "norsegfx", "germangfx", "frankishgfx", "westerngfx", "saxongfx", "italiangfx", "southerngfx", "occitangfx",
             "easterngfx", "byzantinegfx", "easternslavicgfx", "westernslavicgfx",
             "celticgfx"
         };
 
-        private static List<String> bl = new List<string>()
+        private static List<String> s_bl = new List<string>()
         {
             "ugricgfx", "turkishgfx", "mongolgfx", "muslimgfx", "persiangfx", "cumangfx", "arabicgfx",
             "andalusiangfx", "africangfx", "mesoamericangfx", "indiangfx"
         };
 
-     
+
         internal static string GetRandomCultureGraphics(CultureGroupParser group = null)
         {
             if (group != null)
@@ -351,7 +360,7 @@ namespace CrusaderKingsStoryGen
                         case "italiangfx":
                         case "celticgfx":
                         case "mongolgfx":
-                            return wh[Rand.Next(gfx.Count())];
+                            return s_wh[Rand.Next(s_gfx.Count())];
                             break;
                         case "ugricgfx":
                         case "turkishgfx":
@@ -363,7 +372,7 @@ namespace CrusaderKingsStoryGen
                         case "africangfx":
                         case "mesoamericangfx":
                         case "indiangfx":
-                            return bl[Rand.Next(gfx.Count())];
+                            return s_bl[Rand.Next(s_gfx.Count())];
                             break;
                     }
                 }
@@ -379,7 +388,7 @@ namespace CrusaderKingsStoryGen
                         case "italiangfx":
                         case "celticgfx":
                         case "mongolgfx":
-                            return bl[Rand.Next(gfx.Count())];
+                            return s_bl[Rand.Next(s_gfx.Count())];
                             break;
                         case "ugricgfx":
                         case "turkishgfx":
@@ -391,13 +400,13 @@ namespace CrusaderKingsStoryGen
                         case "africangfx":
                         case "mesoamericangfx":
                         case "indiangfx":
-                            return wh[Rand.Next(gfx.Count())];
+                            return s_wh[Rand.Next(s_gfx.Count())];
                             break;
                     }
                 }
             }
 
-            return gfx[Rand.Next(gfx.Count())];
+            return s_gfx[Rand.Next(s_gfx.Count())];
         }
 
         public String PickCharacterName()
@@ -411,7 +420,7 @@ namespace CrusaderKingsStoryGen
             do
             {
                 str = DoPickCharacterName(isFemale);
-            } while (str.Trim().Length==0);
+            } while (str.Trim().Length == 0);
 
             return str;
         }
@@ -422,25 +431,23 @@ namespace CrusaderKingsStoryGen
                 return dna.GetFemaleName();
             return dna.GetMaleName();
         }
-
     }
-    class CultureManager
+    internal class CultureManager
     {
         public static CultureManager instance = new CultureManager();
-        
-        private Script script;
+
+        private Script _script;
         public List<CultureParser> AllCultures = new List<CultureParser>();
         public Dictionary<String, CultureParser> CultureMap = new Dictionary<String, CultureParser>();
         public List<CultureGroupParser> AllCultureGroups = new List<CultureGroupParser>();
         public CultureManager()
         {
-        
         }
 
         public Script Script
         {
-            get { return script; }
-            set { script = value; }
+            get { return _script; }
+            set { _script = value; }
         }
 
         public Dictionary<String, CultureGroupParser> GroupMap = new Dictionary<string, CultureGroupParser>();
@@ -449,9 +456,9 @@ namespace CrusaderKingsStoryGen
         {
             ScriptScope scope = new ScriptScope();
             scope.Name = name;
-            
-            script.Root.Add(scope);
-            
+
+            _script.Root.Add(scope);
+
             CultureGroupParser r = new CultureGroupParser(scope);
             r.Init();
             if (group != null)
@@ -460,7 +467,7 @@ namespace CrusaderKingsStoryGen
             }
             GroupMap[name] = r;
             AllCultureGroups.Add(r);
-         
+
             r.chosenGfx = scope.Scopes[0].Data;
             return r;
         }
@@ -468,41 +475,39 @@ namespace CrusaderKingsStoryGen
         private string GetRelatedCultureGfx(CultureGroupParser group)
         {
             return CultureParser.GetRandomCultureGraphics(group);
-            
         }
 
         public void Save()
         {
-            script.Save();
+            _script.Save();
         }
 
         public void Init()
         {
             LanguageManager.instance.Add("norse", StarNames.Generate(Rand.Next(1000000)));
             LanguageManager.instance.Add("pagan", StarNames.Generate(Rand.Next(1000000)));
-            
+
             Script s = new Script();
-            script = s; 
+            _script = s;
             s.Name = Globals.ModDir + "common/cultures/00_cultures.txt";
             s.Root = new ScriptScope();
             CultureGroupParser r = AddCultureGroup("barbarian");
 
-          //  r.Init();
+            //  r.Init();
             AllCultureGroups.Add(r);
 
             var cul = r.AddCulture("norse");
 
             cul.dna = CulturalDnaManager.instance.GetNewFromVanillaCulture();
             cul.dna.horde = false;
-         //   cul.dna.horde = false;
-            cul.DoDetailsForCulture(); 
-            
+            //   cul.dna.horde = false;
+            cul.DoDetailsForCulture();
+
             //    cul.Init();
             cul.Name = cul.Scope.Name;
             CultureMap[cul.Scope.Name] = cul;
             AllCultures.Add(cul);
             s.Save();
-           
         }
 
         public CultureParser BranchCulture(string Culture)
@@ -519,18 +524,15 @@ namespace CrusaderKingsStoryGen
                 rel2.Init();
                 rel2.dna = rel.dna.Mutate(6);
                 rel2.dna.DoRandom();
-     
             }
             else
             {
                 rel2.Init();
                 rel2.dna = rel.dna.MutateSmall(5);
-                
             }
-     
+
             rel2.DoDetailsForCulture();
             return rel2;
         }
-   
     }
 }

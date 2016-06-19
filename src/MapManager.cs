@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -13,15 +29,15 @@ using CrusaderKingsStoryGen.Simulation;
 
 namespace CrusaderKingsStoryGen
 {
-    class MapManager
+    internal class MapManager
     {
-        public class ProvinceMapBitmap 
+        public class ProvinceMapBitmap
         {
             public Bitmap Bitmap { get; set; }
             public Point MapPoint { get; set; }
         }
         public Dictionary<int, ProvinceMapBitmap> ProvinceBitmaps = new Dictionary<int, ProvinceMapBitmap>();
-        private ProvinceParser[,] ProvincePixelMap;
+        private ProvinceParser[,] _provincePixelMap;
         public Bitmap ProvinceRenderBitmap;
         public float SizeMod = 0.5f;
         public float RenderMod = 1.0f;
@@ -33,7 +49,7 @@ namespace CrusaderKingsStoryGen
 
         public void Save()
         {
-            foreach (var provinceScript in provinceScripts)
+            foreach (var provinceScript in _provinceScripts)
             {
                 provinceScript.Save();
             }
@@ -50,7 +66,6 @@ namespace CrusaderKingsStoryGen
                 {
                     if (!provinces.Contains(parser))
                         choices.Add(parser);
-
                 }
             }
             for (int i = 0; i < c; i++)
@@ -75,7 +90,6 @@ namespace CrusaderKingsStoryGen
                     var t = parser.Title;
                     if (!provinces.Contains(parser) && (head == null || (head == t.Holder || (head.PrimaryTitle.Rank == 2 && parser.Title.TopmostTitle == head.PrimaryTitle.TopmostTitle)) && (parser.Title.Liege == null || parser.Title.Rank == 2)))
                         choices.Add(parser);
-
                 }
             }
             for (int i = 0; i < c; i++)
@@ -105,7 +119,6 @@ namespace CrusaderKingsStoryGen
                     var t = parser.Title;
                     if (!provinces.Contains(parser) && (head == parser.Title.Holder || parser.Title.Holder == null || (parser.Title.Liege != null && head == parser.TotalLeader)))
                         choices.Add(parser);
-
                 }
             }
             for (int i = 0; i < c; i++)
@@ -120,7 +133,7 @@ namespace CrusaderKingsStoryGen
             }
         }
 
-        List<Script>  provinceScripts = new List<Script>();
+        private List<Script> _provinceScripts = new List<Script>();
         public void Load()
         {
             String provincesDir = Globals.GameDir + "history/provinces/";
@@ -131,9 +144,9 @@ namespace CrusaderKingsStoryGen
             }
             TitleManager.instance.Load();
 
-        //    foreach (var provinceParser in Provinces)
+            //    foreach (var provinceParser in Provinces)
             {
-        //        provinceParser.DoTitleOwnership();
+                //        provinceParser.DoTitleOwnership();
             }
 
             for (int n = 0; n < 2000; n++)
@@ -142,7 +155,7 @@ namespace CrusaderKingsStoryGen
                 parser.Name = "c_unnamed" + n;
                 parser.id = n + 1;
                 ProvinceIDMap[parser.id] = parser;
-           //     TitleManager.instance.CreateDukeScriptScope();
+                //     TitleManager.instance.CreateDukeScriptScope();
                 Provinces.Add(parser);
             }
             provincesDir = Globals.GameDir + "history/provinces/";
@@ -163,20 +176,17 @@ namespace CrusaderKingsStoryGen
                     }
                     else
                     {
-                        
                     }
-
                 }
                 ProvinceIDMap[id].land = true;
-
             }
             //s
             ProvinceBitmap = new Bitmap(Globals.MapDir + "map/provinces.bmp");
             ProvinceBitmap = ResizeBitmap(ProvinceBitmap, (int)(ProvinceBitmap.Width * SizeMod), (int)(ProvinceBitmap.Height * SizeMod));
             ProvinceRenderBitmap = new Bitmap(ProvinceBitmap.Width, ProvinceBitmap.Height);
             LoadDefinitions();
-          
-            ProvincePixelMap = new ProvinceParser[ProvinceBitmap.Width, ProvinceBitmap.Height];
+
+            _provincePixelMap = new ProvinceParser[ProvinceBitmap.Width, ProvinceBitmap.Height];
 
             CreateLandscape();
 
@@ -189,9 +199,8 @@ namespace CrusaderKingsStoryGen
                     // col2 = Color.FromArgb(255, col.R, col.G, col.B);
                     if (ProvinceColorMap.ContainsKey(col))
                     {
-                        ProvincePixelMap[x, y] = ProvinceColorMap[col];
+                        _provincePixelMap[x, y] = ProvinceColorMap[col];
                         ProvinceColorMap[col].Points.Add(new Point(x, y));
-         
                     }
 
                     int minX = x - 1;
@@ -215,9 +224,6 @@ namespace CrusaderKingsStoryGen
                             }
                         }
                     }
-
-
-
                 }
 
             for (int y = lockBitmap.Height - 1; y >= 0; y--)
@@ -225,9 +231,9 @@ namespace CrusaderKingsStoryGen
                 {
                     Color col = lockBitmap.GetPixel(x, y);
                     // col2 = Color.FromArgb(255, col.R, col.G, col.B);
-                   
-                    int maxX = x+1;
-                    int maxY = y+1;
+
+                    int maxX = x + 1;
+                    int maxY = y + 1;
 
                     maxX = Math.Min(lockBitmap.Width - 1, maxX);
                     maxY = Math.Min(lockBitmap.Height - 1, maxY);
@@ -246,9 +252,6 @@ namespace CrusaderKingsStoryGen
                             }
                         }
                     }
-
-
-
                 }
             lockBitmap.UnlockBits();
 
@@ -271,12 +274,10 @@ namespace CrusaderKingsStoryGen
                         minX = point.X;
                     if (point.Y < minY)
                         minY = point.Y;
-
-
                 }
 
                 Bitmap bmp = new Bitmap(maxX - minX + 1, maxY - minY + 1);
-                ProvinceMapBitmap b = new ProvinceMapBitmap() {Bitmap = bmp, MapPoint = new Point(minX, minY)};
+                ProvinceMapBitmap b = new ProvinceMapBitmap() { Bitmap = bmp, MapPoint = new Point(minX, minY) };
                 LockBitmap lb = new LockBitmap(b.Bitmap);
 
                 lb.LockBits();
@@ -289,7 +290,7 @@ namespace CrusaderKingsStoryGen
                 }
                 foreach (var point in provinceParser.Points)
                 {
-                    lb.SetPixel(point.X-minX, point.Y-minY, Color.White);
+                    lb.SetPixel(point.X - minX, point.Y - minY, Color.White);
                 }
                 lb.UnlockBits();
 
@@ -324,7 +325,6 @@ namespace CrusaderKingsStoryGen
                         if (ProvinceIDMap.ContainsKey(id) && ProvinceIDMap.ContainsKey(id2))
                         {
                             ProvinceIDMap[id].AddAdjacent(ProvinceIDMap[id2]);
-
                         }
                     }
                     count++;
@@ -334,34 +334,33 @@ namespace CrusaderKingsStoryGen
 
                 file.Close();
             }
-          
         }
 
         private void CreateLandscape()
         {
-        /*    LandscapeLibrary.Landscape l = new Landscape(ProvinceBitmap.Width/3, ProvinceBitmap.Height/3, Rand.Next(100000));
+            /*    LandscapeLibrary.Landscape l = new Landscape(ProvinceBitmap.Width/3, ProvinceBitmap.Height/3, Rand.Next(100000));
 
-            l.Generate(200);
+                l.Generate(200);
 
-            LockBitmap b = new LockBitmap(ProvinceBitmap);
+                LockBitmap b = new LockBitmap(ProvinceBitmap);
 
-            b.LockBits();
-            for (int x = 0; x < l.Width; x++)
-            {
-                for (int y = 0; y < l.Height; y++)
+                b.LockBits();
+                for (int x = 0; x < l.Width; x++)
                 {
-                    var col = l.TileMap[(y*l.Width) + x].Tile.DisplayColour;
-                    for (int xx = 0; xx < 3; xx++)
+                    for (int y = 0; y < l.Height; y++)
                     {
-                        for (int yy = 0; yy < 3; yy++)
+                        var col = l.TileMap[(y*l.Width) + x].Tile.DisplayColour;
+                        for (int xx = 0; xx < 3; xx++)
                         {
-                            b.SetPixel((x * 3) + xx, (y * 3) + yy, Color.FromArgb(255, col.R, col.G, col.B));        
+                            for (int yy = 0; yy < 3; yy++)
+                            {
+                                b.SetPixel((x * 3) + xx, (y * 3) + yy, Color.FromArgb(255, col.R, col.G, col.B));        
+                            }
                         }
+
                     }
-                    
                 }
-            }
-            b.UnlockBits();*/
+                b.UnlockBits();*/
         }
 
         private Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
@@ -382,24 +381,24 @@ namespace CrusaderKingsStoryGen
 
         public void LockRenderBitmap()
         {
-        //    globalLockBitmap = new LockBitmap(ProvinceRenderBitmap);
-       //     globalLockBitmap.LockBits();
+            //    globalLockBitmap = new LockBitmap(ProvinceRenderBitmap);
+            //     globalLockBitmap.LockBits();
         }
 
         public void UnlockRenderBitmap()
         {
-       //     globalLockBitmap.UnlockBits();
+            //     globalLockBitmap.UnlockBits();
         }
         public void SetColour(LockBitmap bmp, int province, Color col)
         {
-           // this.ProvinceColorMap = col;
-          //  ProvinceParser provinceParser = ProvinceIDMap[province];
-          //  foreach (var point in provinceParser.Points)
+            // this.ProvinceColorMap = col;
+            //  ProvinceParser provinceParser = ProvinceIDMap[province];
+            //  foreach (var point in provinceParser.Points)
             {
-         //       bmp.SetPixel(point.X, point.Y, col);
+                //       bmp.SetPixel(point.X, point.Y, col);
             }
 
-        //    bmp.UnlockBits();
+            //    bmp.UnlockBits();
         }
         private void LoadDefinitions()
         {
@@ -430,20 +429,16 @@ namespace CrusaderKingsStoryGen
                             ProvinceIDMap[id].provinceGCode = g;
                             ProvinceIDMap[id].provinceBCode = b;
                             ProvinceColorMap[Color.FromArgb(255, r, g, b)] = ProvinceIDMap[id];
-                           
+
                             if (!ProvinceIDMap[id].land)
                             {
-                                
                             }
-
                         }
                     }
                     count++;
                 }
                 file.Close();
             }
-           
-        
         }
 
         public void SaveDefinitions()
@@ -457,9 +452,8 @@ namespace CrusaderKingsStoryGen
                 int count = 0;
                 while ((line = filein.ReadLine()) != null)
                 {
-                  //  if (count > 0)
+                    //  if (count > 0)
                     {
-                 
                         defs.Add(line);
                     }
                 }
@@ -468,24 +462,22 @@ namespace CrusaderKingsStoryGen
             }
 
             int n = 0;
-          //  File.Mutate(filename, filename);
+            //  File.Mutate(filename, filename);
             using (System.IO.StreamWriter file =
                 new System.IO.StreamWriter(filename, false, Encoding.GetEncoding(1252)))
             {
-
                 foreach (var def in defs)
                 {
                     String[] split = def.Split(';');
                     if (split.Length < 5)
                     {
                         file.Write(def + Environment.NewLine);
-                        continue;                        
+                        continue;
                     }
                     if (split[0] == "province")
                     {
                         file.Write(def + Environment.NewLine);
                         continue;
-                    
                     }
 
                     int i = -1;
@@ -495,8 +487,7 @@ namespace CrusaderKingsStoryGen
                     }
                     catch (Exception)
                     {
-                        
-                     //   throw;
+                        //   throw;
                     }
                     if (!ProvinceIDMap.ContainsKey(i))
                     {
@@ -504,56 +495,53 @@ namespace CrusaderKingsStoryGen
                         file.Write(outStr + Environment.NewLine);
                         continue;
                     }
-                       
+
                     if (split[4].Trim().Length > 0 && split[4].Trim() != "x" && ProvinceIDMap.ContainsKey(i) && ProvinceIDMap[i].land && ProvinceIDMap[i].title != null)
                     {
-                        String outStr = split[0] + ";" + split[1] + ";" + split[2] + ";" + split[3] + ";" +  ProvinceIDMap[Convert.ToInt32(split[0])].title.Replace("c_", "") +
+                        String outStr = split[0] + ";" + split[1] + ";" + split[2] + ";" + split[3] + ";" + ProvinceIDMap[Convert.ToInt32(split[0])].title.Replace("c_", "") +
                                         ";" + split[5].Trim();
                         file.Write(outStr + Environment.NewLine);
                         continue;
                     }
                     String ooo = split[0] + ";" + split[1] + ";" + split[2] + ";" + split[3] + ";;" + split[5].Trim();
                     file.Write(ooo + Environment.NewLine);
-               
                 }
 
                 file.Close();
             }
-
-
         }
-    
+
         public Bitmap ProvinceBitmap { get; set; }
-        public Dictionary<int, String> LoadedTerrain= new Dictionary<int, string>();
+        public Dictionary<int, String> LoadedTerrain = new Dictionary<int, string>();
 
         public LockBitmap globalLockBitmap;
 
         public void InitRandom()
         {
-        /*   LockBitmap bmp = new LockBitmap(ProvinceRenderBitmap);
+            /*   LockBitmap bmp = new LockBitmap(ProvinceRenderBitmap);
 
-           bmp.LockBits();
-           foreach (var provinceParser in ProvinceIDMap)
-           {
-               if (provinceParser.Value.ProvinceOwner != null)                
-                    SetColour(bmp, provinceParser.Key, provinceParser.Value.TotalLeader.color);
+               bmp.LockBits();
+               foreach (var provinceParser in ProvinceIDMap)
+               {
+                   if (provinceParser.Value.ProvinceOwner != null)                
+                        SetColour(bmp, provinceParser.Key, provinceParser.Value.TotalLeader.color);
 
-            }
-           bmp.UnlockBits();*/
+                }
+               bmp.UnlockBits();*/
         }
 
         public void RandomChange()
         {
-        //    this.SetColour(Provinces[rand.Next(Provinces.Count)].id, Color.FromArgb(255, rand.Next(255), rand.Next(255), rand.Next(255)));
+            //    this.SetColour(Provinces[rand.Next(Provinces.Count)].id, Color.FromArgb(255, rand.Next(255), rand.Next(255), rand.Next(255)));
         }
-        ColorMatrix cm = new ColorMatrix();
-        ImageAttributes ia = new ImageAttributes();
+        private ColorMatrix _cm = new ColorMatrix();
+        private ImageAttributes _ia = new ImageAttributes();
         public Dictionary<String, ProvinceParser.Barony> Temples = new Dictionary<string, ProvinceParser.Barony>();
 
         public void Draw(Graphics graphics, float w, float h)
         {
-            float xrat = w/1456.0f;
-            float yrat = h/1027.0f;
+            float xrat = w / 1456.0f;
+            float yrat = h / 1027.0f;
             try
             {
                 foreach (var provinceParser in Provinces)
@@ -584,40 +572,36 @@ namespace CrusaderKingsStoryGen
 
                         //    col = Color.FromArgb(255, rand.Next(255), rand.Next(255), rand.Next(255));
                         // Create a new color matrix and set the alpha value to 0.5
-                        cm.Matrix00 = col.R / 255.0f;
-                        cm.Matrix11 = col.G / 255.0f;
-                        cm.Matrix22 = col.B / 255.0f;
-                        cm.Matrix33 = 1.0f;
-                        cm.Matrix44 = 1.0f;
+                        _cm.Matrix00 = col.R / 255.0f;
+                        _cm.Matrix11 = col.G / 255.0f;
+                        _cm.Matrix22 = col.B / 255.0f;
+                        _cm.Matrix33 = 1.0f;
+                        _cm.Matrix44 = 1.0f;
 
                         TitleParser tit = TitleManager.instance.TitleMap[provinceParser.title];
                         if (tit.Liege == null)
-                            cm.Matrix33 = 0.3f;
+                            _cm.Matrix33 = 0.3f;
                         while (tit.Liege != null && tit.Liege.Rank > tit.Rank)
                             tit = tit.Liege;
-                    
+
                         // Create a new image attribute object and set the color matrix to
                         // the one just created
-                        ia.SetColorMatrix(cm);
+                        _ia.SetColorMatrix(_cm);
 
                         if (!ProvinceBitmaps.ContainsKey(provinceParser.id))
                         {
-
                         }
                         Bitmap bmp = this.ProvinceBitmaps[provinceParser.id].Bitmap;
                         var p = this.ProvinceBitmaps[provinceParser.id].MapPoint;
-                        graphics.DrawImage(bmp, new Rectangle((int)(p.X * RenderMod * xrat), (int)(p.Y * RenderMod * yrat), (int)(bmp.Width * RenderMod * xrat), (int)(bmp.Height * RenderMod * yrat)), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, ia);
+                        graphics.DrawImage(bmp, new Rectangle((int)(p.X * RenderMod * xrat), (int)(p.Y * RenderMod * yrat), (int)(bmp.Width * RenderMod * xrat), (int)(bmp.Height * RenderMod * yrat)), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, _ia);
                     }
                 }
             }
             catch (Exception ex)
             {
-                
-
             }
-        
 
-       //     graphics.DrawImage(this.ProvinceBitmap, new Rectangle(0, 0, ProvinceBitmap.Width, ProvinceBitmap.Height));
+            //     graphics.DrawImage(this.ProvinceBitmap, new Rectangle(0, 0, ProvinceBitmap.Width, ProvinceBitmap.Height));
         }
 
         public void UpdateOwnership()

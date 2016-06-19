@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +24,7 @@ using Microsoft.SqlServer.Server;
 
 namespace CrusaderKingsStoryGen
 {
-    class Module
+    internal class Module
     {
         public String name;
         public Dictionary<String, ScriptScope> Events = new Dictionary<String, ScriptScope>();
@@ -23,7 +39,7 @@ namespace CrusaderKingsStoryGen
 
             s.Root = new ScriptScope();
             s.Root.Add(new ScriptCommand("namespace", nameSpace, s.Root));
-       
+
             foreach (var scriptScope in Events)
             {
                 scriptScope.Value.Name = "character_event";
@@ -38,9 +54,9 @@ namespace CrusaderKingsStoryGen
             ScriptScope ss = new ScriptScope();
             s.Root.Add(ss);
             ss.Name = "decisions";
-          //  s.Root.Add(new ScriptCommand("namespace", nameSpace, s.Root));
-       
-             foreach (var scriptScope in Decisions)
+            //  s.Root.Add(new ScriptCommand("namespace", nameSpace, s.Root));
+
+            foreach (var scriptScope in Decisions)
             {
                 ScriptScope e = new ScriptScope();
                 scriptScope.Value.Name = scriptScope.Key;
@@ -53,7 +69,7 @@ namespace CrusaderKingsStoryGen
             s.Name = Globals.ModDir + "common/traits/03_zz_gen_" + name + "_traits.txt";
 
             s.Root = new ScriptScope();
-     //       s.Root.Add(new ScriptCommand("namespace", nameSpace, s.Root));
+            //       s.Root.Add(new ScriptCommand("namespace", nameSpace, s.Root));
             foreach (var scriptScope in Traits)
             {
                 scriptScope.Value.Name = scriptScope.Key;
@@ -63,7 +79,7 @@ namespace CrusaderKingsStoryGen
             s.Save();
         }
     }
-    class ModularFunctionalityManager
+    internal class ModularFunctionalityManager
     {
         public static ModularFunctionalityManager instance = new ModularFunctionalityManager();
         public Dictionary<String, Module> Modules = new Dictionary<string, Module>();
@@ -89,7 +105,7 @@ namespace CrusaderKingsStoryGen
             }
         }
 
-        public SchoolTypes[] Schools = 
+        public SchoolTypes[] Schools =
         {
             new SchoolTypes("peace and tradition", @"
                             monthly_character_piety = 0.5                            
@@ -120,7 +136,7 @@ namespace CrusaderKingsStoryGen
         };
 
         public Module CreateReligionPhilosophy(String nameSpace, String religion, List<SchoolInfo> schools)
-        {      
+        {
             Module m = new Module();
             m.name = religion + "_philosophies";
             m.nameSpace = nameSpace;
@@ -147,7 +163,7 @@ namespace CrusaderKingsStoryGen
                 ScriptScope ev = new ScriptScope();
                 eventID = nameSpace + "." + n;
                 String eventDesc = eventID + "desc";
-                
+
                 TraitManager.instance.AddTrait(StarNames.SafeName(school.Name));
                 LanguageManager.instance.Add(StarNames.SafeName(school.Name), school.Name);
                 LanguageManager.instance.Add("embrace_" + StarNames.SafeName(school.Name), "Embrace " + school.Name);
@@ -222,7 +238,7 @@ namespace CrusaderKingsStoryGen
                 trait.Do(@" 
 	
                 opposites = {
-	                "+ otherSchools + @"
+	                " + otherSchools + @"
 
                 }
 
@@ -274,30 +290,29 @@ namespace CrusaderKingsStoryGen
                     continue;
                 if (Rand.Next(4) != 0)
                     continue;
-/*
-                if (Rand.Next(4) != 0)
-                {
-                    var module = CreateReligionPhilosophy(religionParser.Name, religionParser.Name, new List<SchoolInfo>()
-                    {
-                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
-                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
-                    });
-                    module.Save();
-                }
-                else
-                {
-                    var module = CreateReligionPhilosophy(religionParser.Name, religionParser.Name, new List<SchoolInfo>()
-                    {
-                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
-                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
-                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
-                     });
-                    module.Save();    
-                }
-                */
-                
+                /*
+                                if (Rand.Next(4) != 0)
+                                {
+                                    var module = CreateReligionPhilosophy(religionParser.Name, religionParser.Name, new List<SchoolInfo>()
+                                    {
+                                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
+                                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
+                                    });
+                                    module.Save();
+                                }
+                                else
+                                {
+                                    var module = CreateReligionPhilosophy(religionParser.Name, religionParser.Name, new List<SchoolInfo>()
+                                    {
+                                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
+                                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
+                                        new SchoolInfo() {Name = religionParser.Believers[0].GetCurrentHolder().Culture.dna.GetPlaceName()},
+                                     });
+                                    module.Save();    
+                                }
+                                */
+
             }
-            
         }
     }
 }

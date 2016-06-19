@@ -1,16 +1,32 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms.VisualStyles;
 
 namespace CrusaderKingsStoryGen
 {
-    partial class CulturalDna
+    internal partial class CulturalDna
     {
-        private List<String> vowels = new List<string>() { "a", "e", "i", "o", "u", "ae", "y" };
+        private List<String> _vowels = new List<string>() { "a", "e", "i", "o", "u", "ae", "y" };
         public CultureParser culture;
 
-        public static string[] placeFormatOptions = new[] { "{1}{0}"};
+        public static string[] placeFormatOptions = new[] { "{1}{0}" };
         public string placeFormat = null;
         public float wordLengthBias = 1.0f;
 
@@ -21,9 +37,8 @@ namespace CrusaderKingsStoryGen
         public String baronTitle = "";
         public String mayorTitle = "";
         public String femaleEnd = "";
-        private List<String> wordsForLand = new List<string>()
+        private List<String> _wordsForLand = new List<string>()
         {
-            
         };
 
         public static List<String> CommonWordFormats = new List<string>()
@@ -41,26 +56,25 @@ namespace CrusaderKingsStoryGen
 
         public List<String> WordFormats = new List<string>()
         {
-            
         };
 
         public CulturalDna()
         {
             wordLengthBias = 1.0f;
         }
-        private List<String> firstLetters = new List<string>()
+        private List<String> _firstLetters = new List<string>()
         {
             "a", "e", "d", "k", "q", "w", "r", "t", "r", "s", "t", "l", "n", "k", "b",
         };
 
-        List<String> cons = new List<String> { "q", "w", "r", "t", "r", "s", "t", "l", "n", "k", "b" };
+        private List<String> _cons = new List<String> { "q", "w", "r", "t", "r", "s", "t", "l", "n", "k", "b" };
 
-        private List<String> CommonStartNames = new List<string>();
-        private List<String> CommonMiddleNames = new List<string>();
-        private List<String> CommonEndNames = new List<string>(); 
+        private List<String> _commonStartNames = new List<string>();
+        private List<String> _commonMiddleNames = new List<string>();
+        private List<String> _commonEndNames = new List<string>();
         public List<string> portraitPool = new List<string>();
         public bool dukes_called_kings = false;
-        public bool baron_titles_hidden =false;
+        public bool baron_titles_hidden = false;
         public bool count_titles_hidden = false;
         public bool allow_looting = false;
         public bool seafarer = false;
@@ -73,7 +87,7 @@ namespace CrusaderKingsStoryGen
         public string from_dynasty_prefix = "af ";
         public bool horde = false;
         public CultureParser dna;
-        private bool tribal;
+        private bool _tribal;
 
         public void CreateFromCulture(CultureParser c)
         {
@@ -90,19 +104,19 @@ namespace CrusaderKingsStoryGen
             c.countTitle = countTitle;
             c.baronTitle = baronTitle;
             c.mayorTitle = mayorTitle;
- 
-            c.tribal = tribal;
-            c.wordsForLand.AddRange(wordsForLand);
+
+            c._tribal = _tribal;
+            c._wordsForLand.AddRange(_wordsForLand);
             //c.cons.AddRange(cons);
             c.WordFormats.AddRange(CommonWordFormats);
-          //  c.vowels.Clear();
+            //  c.vowels.Clear();
             //c.vowels.AddRange(vowels);
-            c.CommonStartNames.AddRange(CommonStartNames);
-            c.CommonMiddleNames.AddRange(CommonMiddleNames);
-            c.CommonEndNames.AddRange(CommonEndNames);
+            c._commonStartNames.AddRange(_commonStartNames);
+            c._commonMiddleNames.AddRange(_commonMiddleNames);
+            c._commonEndNames.AddRange(_commonEndNames);
             c.portraitPool.AddRange(portraitPool);
             c.placeFormat = placeFormat;
-            c.firstLetters.AddRange(firstLetters);
+            c._firstLetters.AddRange(_firstLetters);
             c.wordLengthBias = wordLengthBias;
             c.from_dynasty_prefix = from_dynasty_prefix;
             c.count_titles_hidden = count_titles_hidden;
@@ -131,18 +145,18 @@ namespace CrusaderKingsStoryGen
             c.countTitle = countTitle;
             c.baronTitle = baronTitle;
             c.mayorTitle = mayorTitle;
-            
-            c.tribal = tribal;
-            c.wordsForLand.AddRange(wordsForLand);
+
+            c._tribal = _tribal;
+            c._wordsForLand.AddRange(_wordsForLand);
             //c.cons.AddRange(cons);
-         //   c.vowels.AddRange(vowels);
-            c.CommonStartNames.AddRange(CommonStartNames);
-            c.CommonMiddleNames.AddRange(CommonMiddleNames);
-            c.CommonEndNames.AddRange(CommonEndNames);
+            //   c.vowels.AddRange(vowels);
+            c._commonStartNames.AddRange(_commonStartNames);
+            c._commonMiddleNames.AddRange(_commonMiddleNames);
+            c._commonEndNames.AddRange(_commonEndNames);
             c.WordFormats.AddRange(CommonWordFormats);
             c.portraitPool.AddRange(portraitPool);
             c.placeFormat = placeFormat;
-            c.firstLetters.AddRange(firstLetters);
+            c._firstLetters.AddRange(_firstLetters);
             c.wordLengthBias = wordLengthBias;
             c.from_dynasty_prefix = from_dynasty_prefix;
             c.count_titles_hidden = count_titles_hidden;
@@ -167,7 +181,7 @@ namespace CrusaderKingsStoryGen
             from_dynasty_prefix = ConstructWord(2, 4).ToLower() + " ";
             this.female_patronym = ConstructWord(3, 4).ToLower();
             this.male_patronym = ConstructWord(3, 4).ToLower();
-                             
+
             allow_looting = Rand.Next(2) == 0;
             if (allow_looting && GovernmentManager.instance.numNomadic < 10)
                 horde = Rand.Next(2) == 0;
@@ -189,7 +203,6 @@ namespace CrusaderKingsStoryGen
             countTitle = LanguageManager.instance.AddSafe(countTitle);
             baronTitle = LanguageManager.instance.AddSafe(baronTitle);
             mayorTitle = LanguageManager.instance.AddSafe(mayorTitle);
- 
         }
         private void DoRandomChange()
         {
@@ -198,56 +211,50 @@ namespace CrusaderKingsStoryGen
                 case 0:
                     // replace 1/3 of the Start words and replace with random dna culture....
                     {
-                        int count = CommonStartNames.Count / 2;
+                        int count = _commonStartNames.Count / 2;
                         WordFormats.Clear();
-                         ReplaceStartNames(count);                        
+                        ReplaceStartNames(count);
                         {
-                            wordsForLand.Clear();
-                            int c = wordsForLand.Count / 2;
+                            _wordsForLand.Clear();
+                            int c = _wordsForLand.Count / 2;
                             int create = 3;
-                       
+
                             for (int n = 0; n < create; n++)
                             {
                                 String a = "";
                                 a = ConstructWord(2 * wordLengthBias, 4 * wordLengthBias);
 
-                                if (!wordsForLand.Contains(a))
+                                if (!_wordsForLand.Contains(a))
                                 {
-                                    wordsForLand.Add(a);
+                                    _wordsForLand.Add(a);
                                     continue;
                                 }
-
                             }
-
                         }
-
                     }
                     break;
 
                 case 1:
                     {
-
-                        int count = CommonEndNames.Count / 2;
+                        int count = _commonEndNames.Count / 2;
                         ReplaceEndNames(count);
                         WordFormats.Clear();
                         {
-                            wordsForLand.Clear();
-                            int c = wordsForLand.Count / 2;
+                            _wordsForLand.Clear();
+                            int c = _wordsForLand.Count / 2;
                             int create = 3;
 
                             for (int n = 0; n < create; n++)
                             {
                                 String a = "";
                                 a = ConstructWord(2 * wordLengthBias, 4 * wordLengthBias);
-                               
-                                if (!wordsForLand.Contains(a))
+
+                                if (!_wordsForLand.Contains(a))
                                 {
-                                    wordsForLand.Add(a);
+                                    _wordsForLand.Add(a);
                                     continue;
                                 }
-
                             }
-
                         }
                     }
                     break;
@@ -273,20 +280,17 @@ namespace CrusaderKingsStoryGen
                             if (portraitPool.Count == 1)
                             {
                                 portraitPool.Add(culture.GetRelatedCultureGfx(por));
-
                             }
                             else if (portraitPool.Count == 2)
                             {
                                 portraitPool.RemoveAt(Rand.Next(2));
                             }
-
                         }
 
                         if (Rand.Next(6) == 0)
                         {
                             portraitPool.RemoveAt(0);
                             portraitPool.Add(CultureParser.GetRandomCultureGraphics());
-
                         }
                     }
 
@@ -294,47 +298,44 @@ namespace CrusaderKingsStoryGen
 
                 case 3:
 
-                 //   for(int n=0;n<3;n++)
+                    //   for(int n=0;n<3;n++)
                     {
-                       // switch (Rand.Next(6))
+                        // switch (Rand.Next(6))
                         {
-                        //    case 0:
-                                empTitle = ConstructWord(2, 5);
-                                empTitle = LanguageManager.instance.AddSafe(empTitle);
+                            //    case 0:
+                            empTitle = ConstructWord(2, 5);
+                            empTitle = LanguageManager.instance.AddSafe(empTitle);
 
-                         //       break;
-                        //    case 1:
-                                kingTitle = ConstructWord(2, 5);
-                                kingTitle = LanguageManager.instance.AddSafe(kingTitle);
+                            //       break;
+                            //    case 1:
+                            kingTitle = ConstructWord(2, 5);
+                            kingTitle = LanguageManager.instance.AddSafe(kingTitle);
 
-                          //      break;
-                          //  case 2:
-                                dukeTitle = ConstructWord(2, 5);
-                                dukeTitle = LanguageManager.instance.AddSafe(dukeTitle);
+                            //      break;
+                            //  case 2:
+                            dukeTitle = ConstructWord(2, 5);
+                            dukeTitle = LanguageManager.instance.AddSafe(dukeTitle);
 
-                         //       break;
-                         //   case 3:
-                                countTitle = ConstructWord(2, 5);
-                                countTitle = LanguageManager.instance.AddSafe(countTitle);
+                            //       break;
+                            //   case 3:
+                            countTitle = ConstructWord(2, 5);
+                            countTitle = LanguageManager.instance.AddSafe(countTitle);
 
-                           //     break;
-                        //    case 4:
-                                baronTitle = ConstructWord(2, 5);
-                                baronTitle = LanguageManager.instance.AddSafe(baronTitle);
+                            //     break;
+                            //    case 4:
+                            baronTitle = ConstructWord(2, 5);
+                            baronTitle = LanguageManager.instance.AddSafe(baronTitle);
 
-                        //        break;
-                        //    case 5:
-                                mayorTitle = ConstructWord(2, 5);
-                                mayorTitle = LanguageManager.instance.AddSafe(mayorTitle);
+                            //        break;
+                            //    case 5:
+                            mayorTitle = ConstructWord(2, 5);
+                            mayorTitle = LanguageManager.instance.AddSafe(mayorTitle);
 
-                         //       break;
+                            //       break;
                         }
                     }
 
                     break;
-
-
-
             }
 
             if (culture != null)
@@ -342,7 +343,6 @@ namespace CrusaderKingsStoryGen
         }
         private void DoRandomSmallChange()
         {
-          
             {
                 switch (Rand.Next(11))
                 {
@@ -352,7 +352,7 @@ namespace CrusaderKingsStoryGen
                     case 1:
                         dynasty_title_names = !dynasty_title_names;
                         break;
-                     case 2:
+                    case 2:
                         baron_titles_hidden = !baron_titles_hidden;
                         break;
                     case 3:
@@ -371,7 +371,6 @@ namespace CrusaderKingsStoryGen
                         {
                             this.female_patronym = ConstructWord(3, 4);
                             this.male_patronym = ConstructWord(3, 4);
-
                         }
                         break;
                     case 7:
@@ -385,11 +384,11 @@ namespace CrusaderKingsStoryGen
                         WordFormats.Add(CommonWordFormats[Rand.Next(CommonWordFormats.Count)]);
                         break;
                     case 9:
-                        tribal = !tribal;
+                        _tribal = !_tribal;
                         break;
                     case 10:
 
-                    //    for (int n = 0; n < 3; n++)
+                        //    for (int n = 0; n < 3; n++)
                         {
                             switch (Rand.Next(6))
                             {
@@ -428,11 +427,6 @@ namespace CrusaderKingsStoryGen
 
                         break;
                 }
-
-                  
-
-
-
             }
 
             if (culture != null)
@@ -441,49 +435,45 @@ namespace CrusaderKingsStoryGen
 
         private void ReplaceStartNames(int count)
         {
-            int i = CommonStartNames.Count;
+            int i = _commonStartNames.Count;
             int c = count;
             int removed = c;
             for (int n = 0; n < c; n++)
-                CommonStartNames.RemoveAt(Rand.Next(CommonStartNames.Count));
+                _commonStartNames.RemoveAt(Rand.Next(_commonStartNames.Count));
 
-            while (CommonStartNames.Count < i)
-                AddRandomStartNames(i-CommonStartNames.Count);
-
+            while (_commonStartNames.Count < i)
+                AddRandomStartNames(i - _commonStartNames.Count);
         }
 
         private void ReplaceMiddleNames(int count)
         {
             return;
 
-            while (CommonMiddleNames.Count < count)
+            while (_commonMiddleNames.Count < count)
             {
-                AddRandomMiddleNames(count-CommonMiddleNames.Count);
+                AddRandomMiddleNames(count - _commonMiddleNames.Count);
             }
             int c = count;
             int removed = c;
             for (int n = 0; n < c; n++)
             {
-                
-                CommonMiddleNames.RemoveAt(Rand.Next(CommonMiddleNames.Count));
+                _commonMiddleNames.RemoveAt(Rand.Next(_commonMiddleNames.Count));
             }
 
-            while (CommonMiddleNames.Count < c)
-                AddRandomMiddleNames(c-CommonMiddleNames.Count);
-
+            while (_commonMiddleNames.Count < c)
+                AddRandomMiddleNames(c - _commonMiddleNames.Count);
         }
 
         private void ReplaceEndNames(int count)
         {
-            int i = CommonEndNames.Count;
+            int i = _commonEndNames.Count;
             int c = count;
             int removed = c;
             for (int n = 0; n < c; n++)
-                CommonEndNames.RemoveAt(Rand.Next(CommonEndNames.Count));
+                _commonEndNames.RemoveAt(Rand.Next(_commonEndNames.Count));
 
-            while (CommonEndNames.Count < i)
-                AddRandomEndNames(i-CommonEndNames.Count);
-
+            while (_commonEndNames.Count < i)
+                AddRandomEndNames(i - _commonEndNames.Count);
         }
 
         private int AddRandomStartNames(int count)
@@ -494,8 +484,8 @@ namespace CrusaderKingsStoryGen
             int added = 0;
             for (int n = 0; n < c; n++)
             {
-                String str = dna.CommonStartNames[Rand.Next(dna.CommonStartNames.Count)];
-                if (CommonStartNames.Contains(str))
+                String str = dna._commonStartNames[Rand.Next(dna._commonStartNames.Count)];
+                if (_commonStartNames.Contains(str))
                 {
                 }
                 else
@@ -511,7 +501,7 @@ namespace CrusaderKingsStoryGen
                 for (int n = 0; n < c; n++)
                 {
                     var cc = choices[Rand.Next(choices.Count)];
-                    CommonStartNames.Add(cc);
+                    _commonStartNames.Add(cc);
                     choices.Remove(cc);
                     n--;
                     c = Math.Min(choices.Count, c);
@@ -521,20 +511,19 @@ namespace CrusaderKingsStoryGen
 
 
             return added;
-
         }
         private int AddRandomMiddleNames(int count)
         {
             int c = count;
             CulturalDna dna = CulturalDnaManager.instance.GetVanillaCulture((string)null);
-            if (dna.CommonMiddleNames.Count == 0)
+            if (dna._commonMiddleNames.Count == 0)
                 return 0;
             List<String> choices = new List<string>();
             int added = 0;
             for (int n = 0; n < c; n++)
             {
-                String str = dna.CommonMiddleNames[Rand.Next(dna.CommonMiddleNames.Count)];
-                if (CommonMiddleNames.Contains(str))
+                String str = dna._commonMiddleNames[Rand.Next(dna._commonMiddleNames.Count)];
+                if (_commonMiddleNames.Contains(str))
                 {
                 }
                 else
@@ -550,7 +539,7 @@ namespace CrusaderKingsStoryGen
                 for (int n = 0; n < c; n++)
                 {
                     var cc = choices[Rand.Next(choices.Count)];
-                    CommonMiddleNames.Add(cc);
+                    _commonMiddleNames.Add(cc);
                     choices.Remove(cc);
                     n--;
                     c = Math.Min(choices.Count, c);
@@ -560,7 +549,6 @@ namespace CrusaderKingsStoryGen
 
 
             return added;
-
         }
 
         private int AddRandomEndNames(int count)
@@ -571,8 +559,8 @@ namespace CrusaderKingsStoryGen
             int added = 0;
             for (int n = 0; n < c; n++)
             {
-                String str = dna.CommonEndNames[Rand.Next(dna.CommonEndNames.Count)];
-                if (CommonEndNames.Contains(str))
+                String str = dna._commonEndNames[Rand.Next(dna._commonEndNames.Count)];
+                if (_commonEndNames.Contains(str))
                 {
                 }
                 else
@@ -588,7 +576,7 @@ namespace CrusaderKingsStoryGen
                 for (int n = 0; n < c; n++)
                 {
                     var cc = choices[Rand.Next(choices.Count)];
-                    CommonEndNames.Add(cc);
+                    _commonEndNames.Add(cc);
                     choices.Remove(cc);
                     n--;
                     c = Math.Min(choices.Count, c);
@@ -598,7 +586,6 @@ namespace CrusaderKingsStoryGen
 
 
             return added;
-
         }
 
         public string GetMaleNameBlock()

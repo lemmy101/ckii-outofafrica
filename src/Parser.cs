@@ -1,10 +1,26 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace CrusaderKingsStoryGen
 {
-    abstract class Parser
+    internal abstract class Parser
     {
         public string Name { get; set; }
         public Parser(ScriptScope scope)
@@ -17,9 +33,8 @@ namespace CrusaderKingsStoryGen
                 {
                     string name = (child as ScriptCommand).Name;
                     RegisterProperty(line, name, child);
-
                 }
-               
+
                 line++;
             }
         }
@@ -37,7 +52,7 @@ namespace CrusaderKingsStoryGen
                 {
                     if (command.Value.GetType() == propertyInfo.PropertyType)
                     {
-                        propertyInfo.SetValue(this, command.Value);    
+                        propertyInfo.SetValue(this, command.Value);
                     }
                     else
                     {
@@ -90,15 +105,12 @@ namespace CrusaderKingsStoryGen
                                 }
                                 propertyInfo.SetValue(this, Color.FromArgb(255, rgb[0], rgb[1], rgb[2]));
                             }
-                            else propertyInfo.SetValue(this, scriptReference.Referenced); 
+                            else propertyInfo.SetValue(this, scriptReference.Referenced);
                         }
                         else
                         {
-                          
                         }
-                      
                     }
-                    
                 }
             }
 
@@ -119,20 +131,19 @@ namespace CrusaderKingsStoryGen
                 return;
 
             Scope.RemoveAt(PropertyMap[property]);
-            
         }
-        
+
         public void SetProperty(String property, object value)
         {
             if (!PropertyMap.ContainsKey(property))
             {
                 Scope.Delete(property);
                 Scope.Add(new ScriptCommand() { Name = property, Value = value });
-             //   RegisterProperty(Scope.Children.Count-1, property, value);
+                //   RegisterProperty(Scope.Children.Count-1, property, value);
                 return;
             }
 
-            Scope.Children[PropertyMap[property]] = new ScriptCommand() {Name = property, Value = value};
+            Scope.Children[PropertyMap[property]] = new ScriptCommand() { Name = property, Value = value };
             Scope.ChildrenMap[property] = value;
         }
     }

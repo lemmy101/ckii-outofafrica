@@ -1,4 +1,20 @@
-﻿using System;
+﻿// Out of Africa - A random world generator for Crusader Kings II
+// Copyright (C) 2015--2016 yemmlie101 and nuew
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Linq;
@@ -8,10 +24,8 @@ using System.Threading.Tasks;
 
 namespace CrusaderKingsStoryGen
 {
-    partial class CulturalDna
+    internal partial class CulturalDna
     {
-
-     
         public string changeFirstLetter(string input)
         {
             String orig = input;
@@ -21,7 +35,6 @@ namespace CrusaderKingsStoryGen
             String output = "";
             foreach (var s in sub)
             {
-
                 input = s;
                 if (input.Trim().Length == 0)
                     return "";
@@ -31,7 +44,7 @@ namespace CrusaderKingsStoryGen
                         bVowel = true;
                     input = input.Substring(1);
 
-                    String newOne = firstLetters[Rand.Next(firstLetters.Count)];
+                    String newOne = _firstLetters[Rand.Next(_firstLetters.Count)];
                     if (!EndsWithVowel(newOne))
                         input = stripConsinentsFromStart(input);
 
@@ -43,19 +56,18 @@ namespace CrusaderKingsStoryGen
 
                     if (bVowel)
                     {
-                        input = vowels[Rand.Next(vowels.Count)] + input;
+                        input = _vowels[Rand.Next(_vowels.Count)] + input;
                     }
                     else
                     {
                         if (Rand.Next(2) == 0)
-                            input = cons[Rand.Next(cons.Count)] + input;
+                            input = _cons[Rand.Next(_cons.Count)] + input;
                     }
                     if (input.Length == 0)
                         return orig;
 
                     char firstLetter = Char.ToUpper(input[0]);
                     input = firstLetter + input.Substring(1);
-
                 }
 
                 output += input + " ";
@@ -66,9 +78,9 @@ namespace CrusaderKingsStoryGen
 
         private bool EndsWithVowel(string input)
         {
-            for (int n = 0; n < vowels.Count; n++)
+            for (int n = 0; n < _vowels.Count; n++)
             {
-                var vowel = vowels[n];
+                var vowel = _vowels[n];
                 if (input.EndsWith(vowel))
                 {
                     return true;
@@ -77,7 +89,7 @@ namespace CrusaderKingsStoryGen
 
             return false;
         }
-    public string ModifyName(string input)
+        public string ModifyName(string input)
         {
             String[] str = input.Split(' ');
             if (str.Length > 1)
@@ -91,35 +103,33 @@ namespace CrusaderKingsStoryGen
                 case 1:
                     input = changeFirstLetter(input);
                     break;
-
             }
 
             return Capitalize(input);
         }
-    
-      static List<String> choices = new List<string>();
-        
+
+        private static List<String> s_choices = new List<string>();
+
         private string changeRandomVowel(string input)
         {
-            choices.Clear();
-            for (int n = 0; n < vowels.Count; n++)
+            s_choices.Clear();
+            for (int n = 0; n < _vowels.Count; n++)
             {
-                var vowel = vowels[n];
+                var vowel = _vowels[n];
                 if (input.Contains(vowel))
                 {
-                    choices.Add(vowel);
+                    s_choices.Add(vowel);
                 }
             }
 
-            if (choices.Count == 0)
+            if (s_choices.Count == 0)
                 return input;
 
-            var vowelc = choices[Rand.Next(choices.Count)];
+            var vowelc = s_choices[Rand.Next(s_choices.Count)];
             //foreach (var vowel in choices)
             {
-                input = input.Replace(vowelc, vowels[Rand.Next(vowelc.Length)]);
+                input = input.Replace(vowelc, _vowels[Rand.Next(vowelc.Length)]);
                 return input;
-
             }
 
             return input;
@@ -132,19 +142,19 @@ namespace CrusaderKingsStoryGen
 
             int cons = 0;
             int vow = 0;
-            string f = firstLetters[Rand.Next(firstLetters.Count)];
-            
-            if(vowels.Contains(f))
+            string f = _firstLetters[Rand.Next(_firstLetters.Count)];
+
+            if (_vowels.Contains(f))
                 toCap = f + stripVowelsFromStart(toCap);
             else
                 toCap = f + stripConsinentsFromStart(toCap);
-            
+
             for (int n = 0; n < toCap.Length; n++)
             {
                 if (toCap[n] == ' ' || toCap[n] == '-')
                     continue;
 
-                if (vowels.Contains(toCap[n].ToString()) && toCap[n].ToString() != "y")
+                if (_vowels.Contains(toCap[n].ToString()) && toCap[n].ToString() != "y")
                 {
                     vow++;
                     cons = 0;
@@ -154,7 +164,7 @@ namespace CrusaderKingsStoryGen
                     cons++;
                     vow = 0;
                 }
-             
+
                 if (cons > 2)
                 {
                     toCap = toCap.Substring(0, n) + toCap.Substring(n + 1);
@@ -167,7 +177,7 @@ namespace CrusaderKingsStoryGen
                 }
             }
 
-            String[] split = toCap.Split(new char[] {' ', '-'});
+            String[] split = toCap.Split(new char[] { ' ', '-' });
 
             String outp = "";
 
@@ -194,32 +204,27 @@ namespace CrusaderKingsStoryGen
                         outp += " ";
                     else
                         outp += "-";
-                    
                 }
-
             }
-          
+
             return outp.Trim();
         }
-      
+
         private string changeRandomLetter(string input)
         {
             {
-
                 int n = Rand.Next(input.Length);
 
-                input = input.Substring(0, n) + CommonStartNames[Rand.Next(CommonStartNames.Count)] + input.Substring(n + 1);
-
-
+                input = input.Substring(0, n) + _commonStartNames[Rand.Next(_commonStartNames.Count)] + input.Substring(n + 1);
             }
 
             return input;
         }
         private bool StartsWithVowel(string input)
         {
-            for (int n = 0; n < vowels.Count; n++)
+            for (int n = 0; n < _vowels.Count; n++)
             {
-                var vowel = vowels[n];
+                var vowel = _vowels[n];
                 if (input.StartsWith(vowel.ToUpper()) || input.StartsWith(vowel))
                 {
                     return true;
@@ -233,9 +238,9 @@ namespace CrusaderKingsStoryGen
             for (int x = 0; x < input.Length; x++)
             {
                 bool bDoIt = true;
-                for (int n = 0; n < vowels.Count; n++)
+                for (int n = 0; n < _vowels.Count; n++)
                 {
-                    var vowel = vowels[n];
+                    var vowel = _vowels[n];
                     if (input.EndsWith(vowel))
                     {
                         n = 100;
@@ -261,9 +266,9 @@ namespace CrusaderKingsStoryGen
 
         public string stripVowelsFromEnd(String input)
         {
-            for (int n = 0; n < vowels.Count; n++)
+            for (int n = 0; n < _vowels.Count; n++)
             {
-                var vowel = vowels[n];
+                var vowel = _vowels[n];
                 if (input.EndsWith(vowel))
                 {
                     input = input.Substring(0, input.Length - vowel.Length);
@@ -275,9 +280,9 @@ namespace CrusaderKingsStoryGen
         }
         public string stripVowelsFromStart(String input)
         {
-            for (int n = 0; n < vowels.Count; n++)
+            for (int n = 0; n < _vowels.Count; n++)
             {
-                var vowel = vowels[n];
+                var vowel = _vowels[n];
                 if (input.StartsWith(vowel.ToUpper()) || input.StartsWith(vowel))
                 {
                     input = input.Substring(1);
@@ -292,9 +297,9 @@ namespace CrusaderKingsStoryGen
             for (int x = 0; x < input.Length; x++)
             {
                 bool bDoIt = true;
-                for (int n = 0; n < vowels.Count; n++)
+                for (int n = 0; n < _vowels.Count; n++)
                 {
-                    var vowel = vowels[n];
+                    var vowel = _vowels[n];
                     if (input.StartsWith(vowel.ToUpper()) || input.StartsWith(vowel))
                     {
                         n = 100;
@@ -307,15 +312,11 @@ namespace CrusaderKingsStoryGen
                 {
                     input = input.Substring(1);
                     x = -1;
-
                 }
                 else
                 {
                     break;
                 }
-
-
-
             }
 
             return input;
@@ -411,25 +412,25 @@ namespace CrusaderKingsStoryGen
         }
         public void Cannibalize(string str)
         {
-            int min = (str.Length/2)-1;
+            int min = (str.Length / 2) - 1;
             if (min < 3)
                 min = 3;
 
-            String start = GetStart(str, min-1);
-            if (start.Trim().Length > 0 && !CommonStartNames.Contains(start))
-                CommonStartNames.Add(start);
+            String start = GetStart(str, min - 1);
+            if (start.Trim().Length > 0 && !_commonStartNames.Contains(start))
+                _commonStartNames.Add(start);
             String end = GetEnd(str, min);
 
             if (end.Length > 5)
             {
                 String mid = end;
-                mid = GetStart(mid, end.Length/3);
-       //         CommonMiddleNames.Add(mid);
+                mid = GetStart(mid, end.Length / 3);
+                //         CommonMiddleNames.Add(mid);
                 end = end.Substring(mid.Length);
             }
 
-            if (end.Trim().Length > 0 && !CommonEndNames.Contains(end))
-                CommonEndNames.Add(end);
+            if (end.Trim().Length > 0 && !_commonEndNames.Contains(end))
+                _commonEndNames.Add(end);
         }
 
         public String GetMaleCharacterName()
@@ -471,32 +472,33 @@ namespace CrusaderKingsStoryGen
                             end = stripConsinentsFromStart(end);
                         }
                     }
-                    else while (!(start.Length + end.Length < max && start.Length + end.Length >= min) && start.Length > 0 && end.Length > 0)
-                    {
-                        if (start.Length > end.Length)
+                    else
+                        while (!(start.Length + end.Length < max && start.Length + end.Length >= min) && start.Length > 0 && end.Length > 0)
                         {
-                            if (EndsWithVowel(start))
+                            if (start.Length > end.Length)
                             {
-                                start = stripVowelsFromEnd(start);
+                                if (EndsWithVowel(start))
+                                {
+                                    start = stripVowelsFromEnd(start);
+                                }
+                                else
+                                {
+                                    start = stripConsinantsFromEnd(start);
+                                }
                             }
                             else
                             {
-                                start = stripConsinantsFromEnd(start);
+                                if (StartsWithVowel(end))
+                                {
+                                    end = stripVowelsFromStart(end);
+                                }
+                                else
+                                {
+                                    end = stripConsinentsFromStart(end);
+                                }
                             }
-                        }                      
-                        else                     
-                        {
-                            if (StartsWithVowel(end))
-                            {
-                                end = stripVowelsFromStart(end);
-                            }
-                            else
-                            {
-                                end = stripConsinentsFromStart(end);
-                            }
-                        } 
-                    }
-                    str = start  + end;
+                        }
+                    str = start + end;
                 }
                 else
                 {
@@ -511,7 +513,6 @@ namespace CrusaderKingsStoryGen
 
                     str = start + mid + end;
                 }
-              
             } while (str.Length < min || str.Length >= max);
 
             str = str.Replace('"'.ToString(), "");
@@ -539,7 +540,6 @@ namespace CrusaderKingsStoryGen
 
                     rem--;
                 }
-          
             }
 
             if (str.Trim().Length == 1)
@@ -550,18 +550,18 @@ namespace CrusaderKingsStoryGen
 
         private String GetCommonStartName()
         {
-            return CommonStartNames[Rand.Next(CommonStartNames.Count)];
+            return _commonStartNames[Rand.Next(_commonStartNames.Count)];
         }
 
         private String GetCommonMiddleName()
         {
-            if (CommonMiddleNames.Count == 0)
+            if (_commonMiddleNames.Count == 0)
                 return "";
-            return CommonMiddleNames[Rand.Next(CommonMiddleNames.Count)];
+            return _commonMiddleNames[Rand.Next(_commonMiddleNames.Count)];
         }
         private String GetCommonEndName()
         {
-            return CommonEndNames[Rand.Next(CommonEndNames.Count)];
+            return _commonEndNames[Rand.Next(_commonEndNames.Count)];
         }
 
         public String GetPlaceName()
@@ -571,14 +571,12 @@ namespace CrusaderKingsStoryGen
                 for (int n = 0; n < 1; n++)
                 {
                     WordFormats.Add(CommonWordFormats[Rand.Next(CommonWordFormats.Count)]);
-                }            
+                }
             }
-            if (wordsForLand.Count==0)
+            if (_wordsForLand.Count == 0)
             {
-                string s = ConstructWord(2*wordLengthBias, 4*wordLengthBias);
-                wordsForLand.Add(s);
-             
-              
+                string s = ConstructWord(2 * wordLengthBias, 4 * wordLengthBias);
+                _wordsForLand.Add(s);
             }
 
             if (placeFormat == null)
@@ -615,28 +613,28 @@ namespace CrusaderKingsStoryGen
             String[] strs = new String[nWords];
             for (int n = 0; n < nWords; n++)
             {
-                if(nWords==1)
-                    strs[n] = ConstructWord(5*wordLengthBias, 8*wordLengthBias);
+                if (nWords == 1)
+                    strs[n] = ConstructWord(5 * wordLengthBias, 8 * wordLengthBias);
                 else if (nWords == 2)
                 {
                     strs[n] = ConstructWord(3 * wordLengthBias, 5 * wordLengthBias);
-                } else if (nWords == 3)
+                }
+                else if (nWords == 3)
                 {
                     strs[n] = ConstructWord(2 * wordLengthBias, 4 * wordLengthBias);
                 }
-
             }
-            if(nWords == 1)
+            if (nWords == 1)
                 return Capitalize(String.Format(format, strs[0]));
-            else if(nWords == 2)
+            else if (nWords == 2)
                 return Capitalize(String.Format(format, strs[0], strs[1]));
             else
                 return Capitalize(String.Format(format, strs[0], strs[1], strs[2]));
 
             if (Rand.Next(2) == 0)
                 return
-                    Capitalize(String.Format(placeFormat, wordsForLand[Rand.Next(wordsForLand.Count)],
-                        ConstructWord(3*wordLengthBias, 7*wordLengthBias)));
+                    Capitalize(String.Format(placeFormat, _wordsForLand[Rand.Next(_wordsForLand.Count)],
+                        ConstructWord(3 * wordLengthBias, 7 * wordLengthBias)));
             else
             {
                 if (Rand.Next(4) == 0)
@@ -661,9 +659,9 @@ namespace CrusaderKingsStoryGen
         public string GetDynastyName()
         {
             var name = ConstructWord(6 * wordLengthBias, 8 * wordLengthBias);
-            if(Rand.Next(3)==0)
+            if (Rand.Next(3) == 0)
                 ConstructWord(6 * wordLengthBias, 10 * wordLengthBias);
-                   
+
             return name;
         }
 
@@ -680,24 +678,24 @@ namespace CrusaderKingsStoryGen
         {
             var name = ConstructWord(3 * wordLengthBias, 5 * wordLengthBias);
 
-            if(Rand.Next(3)==0)
-            name = stripConsinantsFromEnd(name);
+            if (Rand.Next(3) == 0)
+                name = stripConsinantsFromEnd(name);
 
             return name;
         }
 
         public void ShortenWordCounts()
         {
-            int targ = CommonStartNames.Count/4;
-            int targend = CommonEndNames.Count/4;
+            int targ = _commonStartNames.Count / 4;
+            int targend = _commonEndNames.Count / 4;
 
             targ = Math.Min(20, targ);
             targend = Math.Min(20, targend);
 
-            while (CommonStartNames.Count > targ)
-                CommonStartNames.RemoveAt(Rand.Next(CommonStartNames.Count));
-            while (CommonEndNames.Count > targend)
-                CommonEndNames.RemoveAt(Rand.Next(CommonEndNames.Count));
+            while (_commonStartNames.Count > targ)
+                _commonStartNames.RemoveAt(Rand.Next(_commonStartNames.Count));
+            while (_commonEndNames.Count > targend)
+                _commonEndNames.RemoveAt(Rand.Next(_commonEndNames.Count));
         }
     }
 }
