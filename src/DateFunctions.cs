@@ -26,7 +26,7 @@ namespace CrusaderKingsStoryGen
     {
         public static int MakeDOBAtLeastAdult(int inDOB)
         {
-            int age = 1066 - inDOB;
+            int age = Globals.StartYear - inDOB;
 
             if (age < 16)
                 inDOB -= (16 - age);

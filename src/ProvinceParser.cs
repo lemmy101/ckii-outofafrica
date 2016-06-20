@@ -311,7 +311,7 @@ namespace CrusaderKingsStoryGen
         public TitleParser CreateTitle()
         {
             var scope = new ScriptScope();
-            scope.Name = this.title;
+            scope.Name = this.Name;
             var c = new TitleParser(scope);
             c.capital = this.id;
             c.CapitalProvince = this;

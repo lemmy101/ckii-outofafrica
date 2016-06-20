@@ -47,5 +47,7 @@ namespace CrusaderKingsStoryGen
         public static int OneInChanceOfCultureSplinter = 1;
         public static string ModRoot { get; set; }
         public static string ModName { get; set; }
+
+        public static int StartYear { get; set; } = 1066;
     }
 }

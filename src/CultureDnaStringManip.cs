@@ -229,7 +229,7 @@ namespace CrusaderKingsStoryGen
         }
         public string stripConsinantsFromEnd(String input)
         {
-            for (int x = input.Length; x == 0; x--)
+            for (int x = input.Length-1; x > 0; x--)
             {
                 if (!this.EndsWithVowel(input))
                 {
@@ -308,6 +308,7 @@ namespace CrusaderKingsStoryGen
             bool bDone = false;
             while (!bDone)
             {
+                int lastCount = str.Length;
                 string last = str;
 
                 if (EndsWithVowel(str))
@@ -319,7 +320,7 @@ namespace CrusaderKingsStoryGen
                     str = stripConsinantsFromEnd(str);
                     str = stripVowelsFromEnd(str);
                 }
-                if (str.Length < min)
+                if (str.Length < min || lastCount == str.Length)
                 {
                     str = last;
                     bDone = true;

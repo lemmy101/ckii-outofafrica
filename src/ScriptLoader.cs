@@ -523,6 +523,9 @@ namespace CrusaderKingsStoryGen
 
         public void Save()
         {
+            if (Globals.ModName == null)
+                Globals.ModName = "storygen";
+
             Directory.CreateDirectory(Globals.ModDir);
             Directory.CreateDirectory(Globals.ModDir + "common/");
             Directory.CreateDirectory(Globals.ModDir + "common/cultures/");
@@ -547,6 +550,7 @@ namespace CrusaderKingsStoryGen
             Directory.CreateDirectory(Globals.ModDir + "map/");
 
             String filename = Name.Replace(Globals.GameDir, "");
+            filename = filename.Replace("storygen/", Globals.ModName + "/");
             filename = filename.Replace(Globals.MapDir, "");
             filename = filename.Replace(Globals.ModDir, "");
             filename = filename.Replace(Globals.OModDir, "");

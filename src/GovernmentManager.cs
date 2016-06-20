@@ -58,6 +58,7 @@ namespace CrusaderKingsStoryGen
         }
         public void Save()
         {
+            return;
             foreach (var cultureParser in CultureManager.instance.AllCultures)
             {
                 foreach (var government in cultureParser.Governments)
