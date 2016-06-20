@@ -330,7 +330,26 @@ namespace CrusaderKingsStoryGen
                     count++;
                 }
 
-                ProvinceIDMap[73].AddAdjacent(ProvinceIDMap[75]);
+                // Fake adjacencies to allow islands to be populated
+                // TODO This should be generalized
+                ProvinceIDMap[170].AddAdjacent(ProvinceIDMap[827]); // Denia <> Mallorca
+                ProvinceIDMap[33].AddAdjacent(ProvinceIDMap[1]); // Færeyar <> Vestisland
+                ProvinceIDMap[277].AddAdjacent(ProvinceIDMap[33]); // Naumadal <> Færeyar
+                ProvinceIDMap[277].AddAdjacent(ProvinceIDMap[34]); // Naumadal <> Shetland
+                ProvinceIDMap[33].AddAdjacent(ProvinceIDMap[34]); // Færeyar <> Shetland
+                ProvinceIDMap[36].AddAdjacent(ProvinceIDMap[33]); // Orkney <> Færeyar
+                ProvinceIDMap[36].AddAdjacent(ProvinceIDMap[34]); // Orkney <> Shetland
+                ProvinceIDMap[73].AddAdjacent(ProvinceIDMap[75]); // Kent <> Boulogne
+                ProvinceIDMap[817].AddAdjacent(ProvinceIDMap[326]); // Tunis <> Cagliari
+                ProvinceIDMap[847].AddAdjacent(ProvinceIDMap[849]); // Tamdoult <> Canarias
+                ProvinceIDMap[324].AddAdjacent(ProvinceIDMap[327]); // Corsica <> Pisa
+                ProvinceIDMap[324].AddAdjacent(ProvinceIDMap[233]); // Corsica <> Genoa
+                ProvinceIDMap[478].AddAdjacent(ProvinceIDMap[479]); // Monemvasia <> Kaneia
+                ProvinceIDMap[483].AddAdjacent(ProvinceIDMap[480]); // Rhodos <> Chandax
+                ProvinceIDMap[767].AddAdjacent(ProvinceIDMap[757]); // Tripoli <> Famagusta
+                ProvinceIDMap[758].AddAdjacent(ProvinceIDMap[757]); // Seleukeia <> Famagusta
+                ProvinceIDMap[871].AddAdjacent(ProvinceIDMap[1369]); // Busaso <> Socotra
+                ProvinceIDMap[1413].AddAdjacent(ProvinceIDMap[1360]); // Venadu <> Maldives
 
                 file.Close();
             }
