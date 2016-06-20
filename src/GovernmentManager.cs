@@ -60,10 +60,6 @@ namespace CrusaderKingsStoryGen
         {
             foreach (var cultureParser in CultureManager.instance.AllCultures)
             {
-                if (cultureParser.Governments.Count == 0)
-                {
-                    var gov = GovernmentManager.instance.CreateNewGovernment(cultureParser);
-                }
                 foreach (var government in cultureParser.Governments)
                 {
                     if (government.cultureAllow.Count == 0)

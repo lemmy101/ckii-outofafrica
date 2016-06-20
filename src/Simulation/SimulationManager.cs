@@ -114,9 +114,6 @@ namespace CrusaderKingsStoryGen.Simulation
                     {
                         if (!character.PrimaryTitle.Government.cultureAllow.Contains(character.culture))
                         {
-                            if (character.culture == "norse")
-                            {
-                            }
                             character.PrimaryTitle.Government.cultureAllow.Add(character.culture);
                             //Government.cultureDone.Add(character.culture + "_" + character.PrimaryTitle.Government.type);
 
@@ -158,10 +155,6 @@ namespace CrusaderKingsStoryGen.Simulation
                     }
                 }
                 Year++;
-                if (Year == 5000)
-                {
-                    //      Form1.instance.Export();
-                }
             }
 
             MapManager.instance.UnlockRenderBitmap();

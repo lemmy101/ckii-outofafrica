@@ -126,13 +126,7 @@ namespace CrusaderKingsStoryGen
                 return input;
 
             var vowelc = s_choices[Rand.Next(s_choices.Count)];
-            //foreach (var vowel in choices)
-            {
-                input = input.Replace(vowelc, _vowels[Rand.Next(vowelc.Length)]);
-                return input;
-            }
-
-            return input;
+            return input.Replace(vowelc, _vowels[Rand.Next(vowelc.Length)]);
         }
         public string Capitalize(string toCap)
         {
@@ -235,26 +229,13 @@ namespace CrusaderKingsStoryGen
         }
         public string stripConsinantsFromEnd(String input)
         {
-            for (int x = 0; x < input.Length; x++)
+            for (int x = input.Length; x == 0; x--)
             {
-                bool bDoIt = true;
-                for (int n = 0; n < _vowels.Count; n++)
-                {
-                    var vowel = _vowels[n];
-                    if (input.EndsWith(vowel))
-                    {
-                        n = 100;
-                        bDoIt = false;
-                        continue;
-                    }
-                }
-
-                if (bDoIt)
+                if (!this.EndsWithVowel(input))
                 {
                     input = input.Substring(0, input.Length - 1);
-                    return input;
                 }
-                else
+                else 
                 {
                     break;
                 }
@@ -630,22 +611,6 @@ namespace CrusaderKingsStoryGen
                 return Capitalize(String.Format(format, strs[0], strs[1]));
             else
                 return Capitalize(String.Format(format, strs[0], strs[1], strs[2]));
-
-            if (Rand.Next(2) == 0)
-                return
-                    Capitalize(String.Format(placeFormat, _wordsForLand[Rand.Next(_wordsForLand.Count)],
-                        ConstructWord(3 * wordLengthBias, 7 * wordLengthBias)));
-            else
-            {
-                if (Rand.Next(4) == 0)
-                {
-                    return ConstructWord(6 * wordLengthBias, 8 * wordLengthBias);
-                }
-                else
-                {
-                    return Capitalize(ConstructWord(3 * wordLengthBias, 5 * wordLengthBias) + " " + ConstructWord(3 * wordLengthBias, 4 * wordLengthBias));
-                }
-            }
         }
 
         public string GetMaleName()

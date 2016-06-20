@@ -89,8 +89,6 @@ namespace CrusaderKingsStoryGen
             }
 
             var ev = EventMap["TOG.1200"];
-
-            var e = ev;
         }
 
         public void Save()

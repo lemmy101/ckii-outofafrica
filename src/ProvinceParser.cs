@@ -24,7 +24,6 @@ namespace CrusaderKingsStoryGen
 {
     internal class ProvinceParser : Parser
     {
-        public String Name { get; set; }
         public int id;
         public int provinceRCode;
         public int provinceGCode;
@@ -311,10 +310,6 @@ namespace CrusaderKingsStoryGen
 
         public TitleParser CreateTitle()
         {
-            this.title = this.Name;
-            //    string n = culture.dna.GetPlaceName();
-            //   String sn = StarNames.SafeName(n);
-            //  this.Name = "c_" + sn;
             var scope = new ScriptScope();
             scope.Name = this.title;
             var c = new TitleParser(scope);

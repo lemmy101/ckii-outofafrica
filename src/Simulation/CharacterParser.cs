@@ -311,12 +311,6 @@ namespace CrusaderKingsStoryGen.Simulation
                     if (parser.Title.Holder != null)
                     {
                         continue;
-                        if (parser.Title.Holder == this || parser.Title.Holder.TopLiegeCharacter == this.TopLiegeCharacter)
-                        {
-                            {
-                                continue;
-                            }
-                        }
                     }
 
                     if (!targets.Contains(parser))

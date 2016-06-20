@@ -39,7 +39,6 @@ namespace CrusaderKingsStoryGen
             CharactersScript.Root = new ScriptScope();
             CharactersScript.Root.AllowDuplicates = false;
             CharactersScript.Root.Clear();
-            int d = 1066 - 18;
             foreach (var child in CharactersScript.Root.Children)
             {
                 if (child is ScriptScope)

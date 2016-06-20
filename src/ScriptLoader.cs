@@ -535,6 +535,7 @@ namespace CrusaderKingsStoryGen
             Directory.CreateDirectory(Globals.ModDir + "history/");
             Directory.CreateDirectory(Globals.ModDir + "history/characters/");
             Directory.CreateDirectory(Globals.ModDir + "history/provinces/");
+            Directory.CreateDirectory(Globals.ModDir + "history/technology/");
             Directory.CreateDirectory(Globals.ModDir + "history/titles/");
             Directory.CreateDirectory(Globals.ModDir + "decisions/");
             Directory.CreateDirectory(Globals.ModDir + "events/");

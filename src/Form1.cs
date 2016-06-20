@@ -56,14 +56,14 @@ namespace CrusaderKingsStoryGen
                     new System.IO.StreamReader(filename, Encoding.GetEncoding(1252)))
                 {
                     string line = "";
-                    int count = 0;
                     while ((line = file.ReadLine()) != null)
                     {
                         Globals.GameDir = line;
                         Globals.MapDir = line;
                     }
                 }
-                if (Directory.Exists(Globals.MapDir) && File.Exists(Globals.GameDir + "ck2game.exe"))
+                if (Directory.Exists(Globals.MapDir) && (File.Exists(Globals.GameDir + "ck2game.exe")
+                      || File.Exists(Globals.GameDir + "ck2")))
                 {
                     ck2dir.Text = Globals.GameDir;
                 }
@@ -274,6 +274,7 @@ replace_path=""history/titles""
 replace_path=""history/characters""
 replace_path=""history/wars""
 replace_path=""history/provinces""
+replace_path=""history/technology""
 replace_path=""common/landed_titles""
 replace_path=""common/dynasties""
 replace_path=""common/cultures""
@@ -350,7 +351,6 @@ replace_path=""common/religious_titles""
 
                 var list = title.GetAllProvinces();
 
-                int num = Math.Min(5, list.Count / 2);
                 chr.GiveTitleAsHolder(list[0].Title.Liege);
                 foreach (var value in list[0].Title.Liege.SubTitles.Values)
                 {

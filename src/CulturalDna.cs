@@ -216,7 +216,6 @@ namespace CrusaderKingsStoryGen
                         ReplaceStartNames(count);
                         {
                             _wordsForLand.Clear();
-                            int c = _wordsForLand.Count / 2;
                             int create = 3;
 
                             for (int n = 0; n < create; n++)
@@ -241,7 +240,6 @@ namespace CrusaderKingsStoryGen
                         WordFormats.Clear();
                         {
                             _wordsForLand.Clear();
-                            int c = _wordsForLand.Count / 2;
                             int create = 3;
 
                             for (int n = 0; n < create; n++)
@@ -437,7 +435,6 @@ namespace CrusaderKingsStoryGen
         {
             int i = _commonStartNames.Count;
             int c = count;
-            int removed = c;
             for (int n = 0; n < c; n++)
                 _commonStartNames.RemoveAt(Rand.Next(_commonStartNames.Count));
 
@@ -448,27 +445,12 @@ namespace CrusaderKingsStoryGen
         private void ReplaceMiddleNames(int count)
         {
             return;
-
-            while (_commonMiddleNames.Count < count)
-            {
-                AddRandomMiddleNames(count - _commonMiddleNames.Count);
-            }
-            int c = count;
-            int removed = c;
-            for (int n = 0; n < c; n++)
-            {
-                _commonMiddleNames.RemoveAt(Rand.Next(_commonMiddleNames.Count));
-            }
-
-            while (_commonMiddleNames.Count < c)
-                AddRandomMiddleNames(c - _commonMiddleNames.Count);
         }
 
         private void ReplaceEndNames(int count)
         {
             int i = _commonEndNames.Count;
             int c = count;
-            int removed = c;
             for (int n = 0; n < c; n++)
                 _commonEndNames.RemoveAt(Rand.Next(_commonEndNames.Count));
 

@@ -361,7 +361,6 @@ namespace CrusaderKingsStoryGen
                         case "celticgfx":
                         case "mongolgfx":
                             return s_wh[Rand.Next(s_gfx.Count())];
-                            break;
                         case "ugricgfx":
                         case "turkishgfx":
                         case "muslimgfx":
@@ -373,7 +372,6 @@ namespace CrusaderKingsStoryGen
                         case "mesoamericangfx":
                         case "indiangfx":
                             return s_bl[Rand.Next(s_gfx.Count())];
-                            break;
                     }
                 }
                 else
@@ -389,7 +387,6 @@ namespace CrusaderKingsStoryGen
                         case "celticgfx":
                         case "mongolgfx":
                             return s_bl[Rand.Next(s_gfx.Count())];
-                            break;
                         case "ugricgfx":
                         case "turkishgfx":
                         case "muslimgfx":
@@ -401,7 +398,6 @@ namespace CrusaderKingsStoryGen
                         case "mesoamericangfx":
                         case "indiangfx":
                             return s_wh[Rand.Next(s_gfx.Count())];
-                            break;
                     }
                 }
             }

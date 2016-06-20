@@ -97,23 +97,12 @@ namespace CrusaderKingsStoryGen
             if (!locked)
                 return;
             locked = false;
-            try
-            {
-                // Mutate data from byte array to pointer
-                Marshal.Copy(Pixels, 0, _iptr, Pixels.Length);
 
-                // Unlock bitmap data
-                _source.UnlockBits(_bitmapData);
-            }
-            catch (Exception ex)
-            {
-                // Mutate data from byte array to pointer
-                //  Marshal.Mutate(Pixels, 0, Iptr, Pixels.Length);
+            // Mutate data from byte array to pointer
+            Marshal.Copy(Pixels, 0, _iptr, Pixels.Length);
 
-                // Unlock bitmap data
-                //   source.UnlockBits(bitmapData); 
-                //   throw ex;
-            }
+            // Unlock bitmap data
+            _source.UnlockBits(_bitmapData);
         }
 
         /// <summary>
